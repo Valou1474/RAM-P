@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAME — Contact</title>
+  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+
+  <!-- Police pour les titres/écritures -->
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --pink:#f72585; --pink-dark:#b5179e;
+      --blue:#3a0ca3; --blue-bright:#4361ee;
+      --nav-bg:#000; --nav-fg:#eee;
+      --pill:#111; --pill-border:#fff;
+      --navH:56px;
+      --glass-bg: rgba(0,0,0,.35);
+      --glass-bd: rgba(255,255,255,.25);
+
+      /* Transition entre pages */
+      --page-xdur: 320ms;
+      --page-xease: cubic-bezier(.2,.6,.2,1);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:#000; overflow:auto; /* on scrolle la page de contact */
+
+      /* Fade-in à l'arrivée */
+      opacity:0;
+      transform:translateY(8px);
+      transition:
+        opacity var(--page-xdur) var(--page-xease),
+        transform var(--page-xdur) var(--page-xease);
+    }
+    /* visible après chargement */
+    body.is-loaded{ opacity:1; transform:none; }
+    /* fade-out au départ */
+    body.is-exiting{ opacity:0; transform:translateY(8px); }
+
+    /* ===== FOND ===== */
+    .bg{position:fixed; inset:0; z-index:-2; overflow:hidden;}
+    .bg video,.bg img{width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.05) saturate(1.05);}
+    .bg::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35)); z-index:1;}
+
+    /* ===== NAV ===== */
+    .nav{
+      position:fixed; top:0; left:0; right:0; height:var(--navH);
+      display:flex; align-items:center; gap:.75rem;
+      padding:0 .75rem; background:var(--nav-bg); color:var(--nav-fg); z-index:10;
+    }
+    .nav a{
+      color:inherit; text-decoration:none; padding:.35rem .7rem; border-radius:.65rem;
+      display:inline-flex; align-items:center; gap:.5rem; opacity:.9;
+    }
+    .nav a:hover{opacity:1}
+    .nav .spacer{flex:1}
+    .nav .pill{background:var(--pill); border:1.5px solid var(--pill-border); font-weight:600;}
+
+    /* ===== BANDEAU “écritures” (CLIQUABLE) ===== */
+    .top-words{
+      position:fixed; left:0; right:0; top:var(--navH);
+      padding: clamp(6px, 2.5vh, 28px) clamp(12px, 3vw, 40px);
+      display:grid; grid-template-columns: 1fr auto; align-items:center;
+      pointer-events:auto;
+      z-index:9;
+    }
+    .words-left{display:flex; align-items:center; gap: clamp(28px, 9vw, 160px); flex-wrap:wrap;}
+
+    .word-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family:'Chewy', cursive;
+      font-size:clamp(20px, 2.6vw, 36px);
+      letter-spacing:.02em;
+      color:#fff; text-decoration:none;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+      -webkit-text-stroke:.5px rgba(0,0,0,.5);
+      white-space:nowrap; opacity:.98;
+      padding:.2rem .4rem; border-radius:.5rem;
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    .word-btn:hover{ opacity:1; transform:translateY(-1px); }
+    .word-btn:focus-visible{ outline:2px dashed rgba(255,255,255,.8); outline-offset:3px; }
+
+    .brand{
+      justify-self:end;
+      font-family:'Chewy', cursive;
+      font-size:clamp(20px, 2.6vw, 36px);
+    }
+
+    /* ===== CONTENU ===== */
+    .content{ padding-top: calc(var(--navH) + var(--twH, 84px)); }
+
+    .hero{
+      display:grid; place-items:center;
+      min-height:44vh; text-align:center; position:relative;
+    }
+    .hero .title{
+      font-family:'Chewy', cursive;
+      font-size:clamp(26px, 3.2vw, 42px);
+      letter-spacing:.02em; margin:.2rem 0;
+      text-shadow:0 2px 10px rgba(0,0,0,.75);
+    }
+
+    .info{
+      background:var(--glass-bg); border:1px solid var(--glass-bd);
+      backdrop-filter:blur(6px); border-radius:16px;
+      max-width:760px; margin:0 auto 10vh; padding:2.2rem 1.4rem;
+      text-align:center; box-shadow:0 10px 40px rgba(0,0,0,.35);
+    }
+    .info .brandTitle{
+      font-family:'Chewy', cursive;
+      font-size:clamp(28px, 3.5vw, 46px);
+      letter-spacing:.02em; margin:0 0 1.1rem;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+    }
+    .lines{
+      display:grid; gap:.45rem;
+      font-size:clamp(16px, 1.4vw, 20px);
+    }
+    .lines a{ color:#fff; text-decoration:none; }
+    .lines a:hover{ opacity:.9 }
+
+    /* Responsive */
+    @media (max-width:700px){
+      :root{ --navH:52px }
+      .brand{display:none;}
+      .info{ margin-bottom:8vh; }
+    }
+
+    /* Accessibilité : réduit les animations si demandé */
+    @media (prefers-reduced-motion: reduce){
+      body{ transition:none !important; transform:none !important; opacity:1 !important; }
+      .word-btn{ transition:none!important; animation:none!important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FOND -->
+  <div class="bg" aria-hidden="true">
+    <video src="assets/video/page4.mp4" autoplay muted loop playsinline poster="media/contact.jpg"></video>
+  </div>
+
+  <!-- NAV identique (Page 4 active) -->
+  <nav class="nav" role="navigation" aria-label="Navigation principale">
+    <div class="spacer"></div>
+    <a href="index.html">Page 1</a>
+    <a href="page2.html">Page 2</a>
+    <a href="page3.html">Page 3</a>
+    <a class="pill" href="page4.html" aria-current="page">Page 4</a>
+  </nav>
+
+  <!-- Bandeau d'écritures (CLIQUABLE) -->
+  <div class="top-words" id="tw">
+    <nav class="words-left" aria-label="Raccourcis">
+      <a class="word-btn" href="page2.html">Production</a>
+      <a class="word-btn" href="page3.html">À propos</a>
+      <a class="word-btn" href="page4.html" aria-current="page">Contact</a>
+    </nav>
+    <a class="brand word-btn" href="index.html">RAME Production</a>
+  </div>
+
+  <!-- CONTENU -->
+  <main class="content">
+    <section class="hero" aria-label="En-tête Contact">
+      <h1 class="title">Contact</h1>
+    </section>
+
+    <section class="info" aria-label="Coordonnées">
+      <h2 class="brandTitle">RAME Production</h2>
+      <div class="lines">
+        <a href="mailto:production@rame.ca">production@rame.ca</a>
+        <a href="tel:4383657824">438.365.7824</a>
+        <span>Montréal</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- JS : hauteur bandeau + transition entre pages -->
+  <script>
+    (function(){
+      // calcule la hauteur du bandeau d'écritures
+      const tw = document.getElementById('tw');
+      function setH(){ document.documentElement.style.setProperty('--twH', (tw?tw.offsetHeight:0) + 'px'); }
+      setH(); addEventListener('resize', setH);
+
+      // Affiche la page (fade-in), y compris via bfcache
+      function showPage(){ document.body.classList.add('is-loaded'); }
+      window.addEventListener('DOMContentLoaded', showPage);
+      window.addEventListener('pageshow', showPage);
+
+      // Intercepte les liens internes pour fade-out avant navigation
+      document.addEventListener('click', function(e){
+        const a = e.target.closest('a[href]');
+        if(!a) return;
+
+        // Laisse passer Ctrl/Cmd/Shift/Alt, clic milieu, download, target=_blank, etc.
+        if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
+
+        const href = a.getAttribute('href');
+        // ignore ancres, mailto, tel et protocoles non http(s)
+        if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+        const url = new URL(href, location.href);
+        const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
+        const sameOrigin = url.origin === location.origin;
+        if(!isHttp || !sameOrigin) return;
+
+        e.preventDefault();
+        document.body.classList.remove('is-loaded');
+        document.body.classList.add('is-exiting');
+        setTimeout(()=>{ location.href = url.href; }, 320); // = --page-xdur
+      }, true);
+    })();
+  </script>
+</body>
+</html>

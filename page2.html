@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAME — Production</title>
+  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+
+  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --pink:#f72585; --pink-dark:#b5179e;
+      --blue:#3a0ca3; --blue-bright:#4361ee;
+      --nav-bg:#000; --nav-fg:#eee;
+      --pill:#111; --pill-border:#fff;
+
+      /* Transition entre pages */
+      --page-xdur: 320ms;
+      --page-xease: cubic-bezier(.2,.6,.2,1);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      overflow:hidden; background:#000;
+
+      /* Fade-in à l'arrivée */
+      opacity:0;
+      transform:translateY(8px);
+      transition:
+        opacity var(--page-xdur) var(--page-xease),
+        transform var(--page-xdur) var(--page-xease);
+    }
+    /* visible après chargement */
+    body.is-loaded{ opacity:1; transform:none; }
+    /* fade-out au départ */
+    body.is-exiting{ opacity:0; transform:translateY(8px); }
+
+    /* ===== FOND ===== */
+    .bg{position:fixed; inset:0; z-index:-2; overflow:hidden;}
+    .bg video,.bg img{width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.05) saturate(1.05);}
+    .bg::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35)); z-index:1;}
+
+    /* ===== NAV ===== */
+    .nav{
+      position:fixed; top:0; left:0; right:0; height:56px;
+      display:flex; align-items:center; gap:.75rem;
+      padding:0 .75rem; background:var(--nav-bg); color:var(--nav-fg); z-index:10;
+    }
+    .nav a{
+      color:inherit; text-decoration:none;
+      padding:.35rem .7rem; border-radius:.65rem;
+      display:inline-flex; align-items:center; gap:.5rem; opacity:.9;
+    }
+    .nav a:hover{opacity:1}
+    .nav .spacer{flex:1}
+    .nav .pill{background:var(--pill); border:1.5px solid var(--pill-border); font-weight:600;}
+
+    /* ===== BANDEAU TITRES cliquables ===== */
+    .top-words{
+      position:fixed; left:0; right:0; top:56px; /* sous la nav */
+      padding: clamp(6px, 2.5vh, 28px) clamp(12px, 3vw, 40px);
+      display:grid; grid-template-columns: 1fr auto; align-items:center;
+      pointer-events:auto;                 /* autorise les clics */
+      z-index:9;                           /* AU-DESSUS du .hero */
+    }
+    @media (max-width:700px){
+      .top-words{ top:52px; }
+    }
+    .words-left{
+      display:flex; align-items:center;
+      gap: clamp(28px, 9vw, 160px);
+      flex-wrap:wrap;
+    }
+    .word-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family:'Chewy', cursive;
+      font-size: clamp(20px, 2.6vw, 36px);
+      letter-spacing:.02em;
+      color:#fff; text-decoration:none;
+      text-shadow:0 2px 8px rgba(0, 0, 0, 0.55);
+      -webkit-text-stroke:.8px rgba(0, 0, 0, 0.5);
+      white-space:nowrap; opacity:.98;
+      padding:.2rem .4rem; border-radius:.5rem;
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    .word-btn:hover{ opacity:1; transform:translateY(-1px)}
+    .word-btn:focus-visible{ outline:2px dashed rgba(255,255,255,.8); outline-offset:3px; }
+
+    .brand{
+      justify-self:end;
+      font-family:'Chewy', cursive;
+      font-size: clamp(20px, 2.6vw, 36px);
+    }
+
+    /* ===== CONTENU ===== */
+    .hero{
+      position:fixed; inset:56px 0 0 0; /* sous la nav */
+      display:flex; align-items:center; justify-content:center; flex-direction:column; gap:1rem;
+      padding:2rem; text-align:center;
+      z-index:0;                         /* sous .top-words */
+    }
+    .card{
+      margin-top: clamp(18vh, 26vh, 32vh);
+      background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.25);
+      backdrop-filter:blur(6px); border-radius:16px; padding:1rem 1.25rem;
+      max-width:min(900px, 92vw); line-height:1.5; box-shadow:0 10px 40px rgba(0,0,0,.35);
+    }
+    .card h2{margin:.2rem 0 .6rem; font-size:clamp(18px,2vw,28px)}
+    .card p{margin:.35rem 0}
+
+    @media (max-width:700px){
+      .nav{height:52px}
+      .hero{inset:52px 0 0 0}
+      .brand{display:none;}
+      .card{margin-top: clamp(14vh, 22vh, 30vh);}
+    }
+    @media (max-height:580px) and (orientation:landscape){
+      .card{margin-top: clamp(10vh, 16vh, 22vh);}
+    }
+
+    /* Accessibilité : réduire les animations si demandé */
+    @media (prefers-reduced-motion: reduce){
+      body{ transition:none !important; transform:none !important; opacity:1 !important; }
+      .word-btn{transition:none!important; animation:none!important}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FOND -->
+  <div class="bg" aria-hidden="true">
+    <video src="assets/video/page2.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
+  </div>
+
+  <!-- NAV (lien “Page 2” actif) -->
+  <nav class="nav" role="navigation" aria-label="Navigation principale">
+    <div class="spacer"></div>
+    <a href="index.html">Page 1</a>
+    <a class="pill" href="page2.html" aria-current="page">Page 2</a>
+    <a href="page3.html">Page 3</a>
+    <a href="page4.html">Page 4</a>
+  </nav>
+
+  <!-- BANDEAU CLIQUABLE -->
+  <div class="top-words" id="tw">
+    <nav class="words-left" aria-label="Raccourcis">
+      <a class="word-btn" href="page2.html" aria-current="page">Production</a>
+      <a class="word-btn" href="page3.html">À propos</a>
+      <a class="word-btn" href="page4.html">Contact</a>
+    </nav>
+    <a class="brand word-btn" href="index.html">RAME Production</a>
+  </div>
+
+  <!-- CONTENU -->
+  <main class="hero">
+    <section class="card" aria-label="Contenu principal">
+      <h2>Page 2 — Contenu</h2>
+      <p>heiruhfeiugheiuhfiugriuqgiuehrfqhkrefqheri
+ughiuqerhiufghqk;uergkqherkj;ghqk;uerhgku;
+qhkerhg;wher;ghr;kwqher;kjgh;qwkhergk;jh
+querhgi;qwheiurhgjqwh;ekrghkjqwherouhgt
+owh;drfhglw;khrlghqwoierghlqwher;klhgljk
+qherkjghq;kjergk;jqhek;jgh;kthr;kghkwljhe
+rk;jghkwherghw;kljhergkt;hwk;rthg;whrtgi
+ouhw;iourthgo;qherhrho;ghwhotghwohgtohw
+;ohghrtwergt;hrklhoiwghg;rthgouireho;gher
+kl;hgk;whrt;oh4</p>
+    </section>
+  </main>
+
+  <!-- Transition de page (fade-in/fade-out) -->
+  <script>
+    // Affiche la page (fade-in), même en retour bfcache
+    function showPage(){ document.body.classList.add('is-loaded'); }
+    window.addEventListener('DOMContentLoaded', showPage);
+    window.addEventListener('pageshow', showPage);
+
+    // Intercepte liens internes pour lancer le fade-out avant navigation
+    document.addEventListener('click', function(e){
+      const a = e.target.closest('a[href]');
+      if(!a) return;
+
+      // Laisse passer Ctrl/Cmd/Shift/Alt, clic milieu, download, target=_blank, etc.
+      if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
+
+      const href = a.getAttribute('href');
+      // ignore ancres, mailto, tel et protocoles non http(s)
+      if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+      const url = new URL(href, location.href);
+      const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
+      const sameOrigin = url.origin === location.origin;
+      if(!isHttp || !sameOrigin) return;
+
+      e.preventDefault();
+      document.body.classList.remove('is-loaded');
+      document.body.classList.add('is-exiting');
+      setTimeout(()=>{ location.href = url.href; }, 320); // = --page-xdur
+    }, true);
+  </script>
+</body>
+</html>
