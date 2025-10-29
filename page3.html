@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>RAME — À propos</title>
   <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
-
-  <!-- Police -->
   <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
 
   <style>
@@ -17,28 +15,25 @@
       --pill:#111; --pill-border:#fff;
       --navH:56px;
 
-      /* Transition entre pages */
+      /* transition pages */
       --page-xdur: 320ms;
       --page-xease: cubic-bezier(.2,.6,.2,1);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; color:#fff;
+      margin:0; color:#fff; background:#000;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:#000; overflow:auto;
+      overflow:auto;
 
-      /* Fade-in à l'arrivée */
-      opacity:0;
-      transform:translateY(8px);
-      transition:
-        opacity var(--page-xdur) var(--page-xease),
-        transform var(--page-xdur) var(--page-xease);
+      /* fade-in / out */
+      opacity:0; transform:translateY(8px);
+      transition:opacity var(--page-xdur) var(--page-xease), transform var(--page-xdur) var(--page-xease);
     }
-    body.is-loaded{ opacity:1; transform:none; }
-    body.is-exiting{ opacity:0; transform:translateY(8px); }
+    body.is-loaded{opacity:1; transform:none}
+    body.is-exiting{opacity:0; transform:translateY(8px)}
 
-    /* ===== FOND ===== */
+    /* ===== FOND VIDÉO ===== */
     .bg{position:fixed; inset:0; z-index:-2; overflow:hidden;}
     .bg video,.bg img{width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.05) saturate(1.05);}
     .bg::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35)); z-index:1;}
@@ -49,15 +44,12 @@
       display:flex; align-items:center; gap:.75rem;
       padding:0 .75rem; background:var(--nav-bg); color:var(--nav-fg); z-index:10;
     }
-    .nav a{
-      color:inherit; text-decoration:none; padding:.35rem .7rem; border-radius:.65rem;
-      display:inline-flex; align-items:center; gap:.5rem; opacity:.9;
-    }
+    .nav a{ color:inherit; text-decoration:none; padding:.35rem .7rem; border-radius:.65rem; display:inline-flex; align-items:center; gap:.5rem; opacity:.9; }
     .nav a:hover{opacity:1}
     .nav .spacer{flex:1}
     .nav .pill{background:var(--pill); border:1.5px solid var(--pill-border); font-weight:600;}
 
-    /* ===== BANDEAU “écritures” cliquable ===== */
+    /* ===== BANDEAU “écritures” (cliquable) ===== */
     .top-words{
       position:fixed; left:0; right:0; top:56px;
       padding: clamp(6px, 2.5vh, 28px) clamp(12px, 3vw, 40px);
@@ -65,50 +57,60 @@
       pointer-events:auto; z-index:9;
     }
     @media (max-width:700px){ .top-words{ top:52px; } }
-
-    .words-left{
-      display:flex; align-items:center;
-      gap: clamp(28px, 9vw, 160px);
-      flex-wrap:wrap;
-    }
+    .words-left{ display:flex; align-items:center; gap: clamp(28px, 9vw, 160px); flex-wrap:wrap; }
     .word-btn{
       display:inline-flex; align-items:center; justify-content:center;
-      font-family:'Chewy', cursive;
-      font-size: clamp(20px, 2.6vw, 36px);
-      letter-spacing:.02em;
-      color:#fff; text-decoration:none;
-      text-shadow:0 2px 8px rgba(0, 0, 0, 0.55);
-      -webkit-text-stroke:.8px rgba(0, 0, 0, 0.5);
-      white-space:nowrap; opacity:.98;
-      padding:.2rem .4rem; border-radius:.5rem;
+      font-family:'Chewy', cursive; font-size: clamp(20px, 2.6vw, 36px);
+      letter-spacing:.02em; color:#fff; text-decoration:none;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+      -webkit-text-stroke:.8px rgba(0,0,0,.5);
+      white-space:nowrap; opacity:.98; padding:.2rem .4rem; border-radius:.5rem;
       transition:opacity .15s ease, transform .15s ease;
     }
     .word-btn:hover{ opacity:1; transform:translateY(-1px) }
     .word-btn:focus-visible{ outline:2px dashed rgba(255,255,255,.8); outline-offset:3px; }
+    .brand{ justify-self:end; font-family:'Chewy', cursive; font-size: clamp(20px, 2.6vw, 36px); }
 
-    .brand{
-      justify-self:end;
-      font-family:'Chewy', cursive;
-      font-size: clamp(20px, 2.6vw, 36px);
-    }
+    /* ===== CONTENU (offset nav+bandeau) ===== */
+    .content{ padding-top: calc(var(--navH) + var(--twH, 84px)); }
 
-    /* ===== CONTENU ===== */
-    .content{
-      padding: calc(var(--navH) + var(--twH, 84px) + 16px) 1rem 4rem;
+    /* ===== HERO À PROPOS SUR LA VIDÉO ===== */
+    .hero-about{
+      min-height: 56vh;              /* hauteur de la zone où la vidéo reste visible */
+      display:grid; place-items:center;
+      position:relative; text-align:center; padding: 1.2rem 1rem 3rem;
     }
-    .section{ max-width: 1100px; margin: 0 auto; }
-    .glass{
+    .hero-about .glass{
       background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.25);
       backdrop-filter:blur(6px); border-radius:16px; padding:1.2rem 1.4rem;
-      box-shadow:0 10px 40px rgba(0,0,0,.35);
+      box-shadow:0 10px 40px rgba(0,0,0,.35); max-width: 1100px; margin: 0 auto;
     }
-    .title{
+    .hero-about .title{
+      font-family:'Chewy', cursive; font-size: clamp(26px, 3.2vw, 42px);
+      letter-spacing:.02em; margin: 0 0 1rem; text-shadow:0 2px 8px rgba(0,0,0,.55);
+    }
+    .hero-about .para{ max-width: 70ch; margin: 0 auto; line-height:1.6; opacity:.95; }
+
+    /* petit fondu vers le noir au bas du hero */
+    .hero-about::after{
+      content:""; position:absolute; left:0; right:0; bottom:-1px; height: 80px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0), #000 80%);
+      pointer-events:none;
+    }
+
+    /* ===== ZONE SOUS LA VIDÉO (fond noir opaque) ===== */
+    .below{
+      background:#000;               /* masque la vidéo */
+      position:relative;
+      padding: 2rem 0 4rem;          /* vertical seulement; le conteneur parent fait la largeur */
+    }
+    .section{ max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+
+    .subtitle{
       font-family:'Chewy', cursive; text-align:center;
-      font-size: clamp(26px, 3.2vw, 42px);
-      letter-spacing:.02em; margin: 0 0 1rem;
+      margin: 0 0 1rem; font-size: clamp(22px, 2.8vw, 34px);
       text-shadow:0 2px 8px rgba(0,0,0,.55);
     }
-    .para{ max-width: 70ch; margin: 0 auto; line-height:1.6; opacity:.95; }
 
     /* ===== TEAM GRID ===== */
     .team-grid{
@@ -134,54 +136,34 @@
     }
     .person .role{ font-size:.95rem; opacity:.9; letter-spacing:.02em; }
 
-    .subtitle{
-      font-family:'Chewy', cursive; text-align:center;
-      margin: 2.4rem 0 1rem; font-size: clamp(22px, 2.8vw, 34px);
-      text-shadow:0 2px 8px rgba(0,0,0,.55);
-    }
-
-    /* === MODE COMPACT : plus de personnes par ligne === */
+    /* Grille compacte (plus de cartes par ligne) */
     .team-grid.dense{
       gap: clamp(8px, 1vw, 16px);
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     }
     .team-grid.dense .person{ padding:10px; border-radius:14px; }
-    .team-grid.dense .person img{
-      aspect-ratio: 3 / 4;     /* un peu moins haut que 4/5 */
-      border-radius:12px;
-    }
-    .team-grid.dense .name{
-      font-size: clamp(14px, 1.6vw, 18px);
-    }
-    .team-grid.dense .role{
-      font-size: clamp(12px, 1.2vw, 14px);
-      opacity:.9;
-    }
+    .team-grid.dense .person img{ aspect-ratio: 3 / 4; border-radius:12px; }
+    .team-grid.dense .name{ font-size: clamp(14px, 1.6vw, 18px); }
+    .team-grid.dense .role{ font-size: clamp(12px, 1.2vw, 14px); opacity:.9; }
     @media (min-width:1400px){
-      .team-grid.dense{
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      }
+      .team-grid.dense{ grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
     }
 
-    /* ===== Responsive ===== */
+    /* Responsive */
     @media (max-width:700px){
       :root{ --navH:52px }
       .brand{display:none;}
-      .content{ padding-bottom: 3rem; }
-    }
-
-    /* Accessibilité */
-    @media (prefers-reduced-motion: reduce){
-      body{ transition:none !important; transform:none !important; opacity:1 !important; }
-      .word-btn{ transition:none!important; animation:none!important; }
-    }
-
-    /* Cacher le menu (nav) sur téléphone + offsets */
-    @media (max-width:700px){
+      /* cacher la nav en haut à droite sur téléphone et réajuster */
       .nav{ display:none !important; }
       .top-words{ top:0 !important; }
       :root{ --navH: 0px; }
       .content{ padding-top: calc(var(--twH, 84px)) !important; }
+    }
+
+    /* Accessibilité: moins d'anim si demandé */
+    @media (prefers-reduced-motion: reduce){
+      body{ transition:none !important; transform:none !important; opacity:1 !important; }
+      .word-btn{ transition:none!important; }
     }
   </style>
 </head>
@@ -201,7 +183,7 @@
     <a href="page4.html">Page 4</a>
   </nav>
 
-  <!-- Bandeau d'écritures (Cliquable) -->
+  <!-- Bandeau d'écritures -->
   <div class="top-words" id="tw">
     <nav class="words-left" aria-label="Raccourcis">
       <a class="word-btn" href="page2.html">Production</a>
@@ -213,105 +195,105 @@
 
   <!-- CONTENU -->
   <main class="content">
-    <!-- A PROPOS -->
-    <section class="section glass" id="about">
-      <h1 class="title">A PROPOS</h1>
-      <p class="para">
-        heiruhfeiugheiuhfiugriuqgiuehrfqhkrefqheri
-        ughiuqerhiufghqk;uergkqherkj;ghqk;uerhgku;
-        qhkerhg;wher;ghr;kwqher;kjgh;qwkhergk;jh
-        querhgi;qwheiurhgjqwh;ekrghkjqwherouhgt
-        owh;drfhglw;khrlghqwoierghlqwher;klhgljk
-        qherkjghq;kjergk;jqhek;jgh;kthr;kghkwljhe
-        rk;jghkwherghw;kljhergkt;hwk;rthg;whrtgi
-        ouhw;iourthgo;qherhrho;ghwhotghwohgtohw
-        ;ohghrtwergt;hrklhoiwghg;rthgouireho;gher
-        kl;hgk;whrt;oh4
-      </p>
-    </section>
-
-    <!-- L'EQUIPE -->
-    <h2 class="subtitle">L’EQUIPE</h2>
-    <section class="section">
-      <div class="team-grid dense">
-        <article class="person">
-          <img src="assets/img/Mathilde-Mevel.avif" alt="Portrait de Mathilde Mevel">
-          <div class="name">Mathilde Mevel</div>
-          <div class="role">Producteur</div>
-        </article>
-
-        <article class="person">
-          <img src="assets/img/paul leblanc.avif" alt="Portrait de Paul Leblanc">
-          <div class="name">Paul Leblanc</div>
-          <div class="role">Producteur</div>
-        </article>
-
-        <!-- Exemples supplémentaires (tu peux dupliquer ces blocs) -->
-        <article class="person">
-          <img src="assets/img/teste1.avif" alt="Portrait membre équipe">
-          <div class="name">Nom Prénom</div>
-          <div class="role">Producteur</div>
-        </article>
-
-        <article class="person">
-          <img src="assets/img/teste4.avif" alt="Portrait membre équipe">
-          <div class="name">Nom Prénom</div>
-          <div class="role">Producteur</div>
-        </article>
+    <!-- 1) HERO AU-DESSUS DE LA VIDÉO -->
+    <section class="hero-about" aria-label="À propos">
+      <div class="glass">
+        <h1 class="title">A PROPOS</h1>
+        <p class="para">
+          heiruhfeiugheiuhfiugriuqgiuehrfqhkrefqheri
+          ughiuqerhiufghqk;uergkqherkj;ghqk;uerhgku;
+          qhkerhg;wher;ghr;kwqher;kjgh;qwkhergk;jh
+          querhgi;qwheiurhgjqwh;ekrghkjqwherouhgt
+          owh;drfhglw;khrlghqwoierghlqwher;klhgljk
+          qherkjghq;kjergk;jqhek;jgh;kthr;kghkwljhe
+          rk;jghkwherghw;kljhergkt;hwk;rthg;whrtgi
+          ouhw;iourthgo;qherhrho;ghwhotghwohgtohw
+          ;ohghrtwergt;hrklhoiwghg;rthgouireho;gher
+          kl;hgk;whrt;oh4
+        </p>
       </div>
     </section>
 
-    <!-- EQUIPE TECHNIQUE -->
-    <h2 class="subtitle">Équipe Technique</h2>
-    <section class="section">
-      <div class="team-grid dense">
-        <article class="person">
-          <img src="assets/img/teste1.avif" alt="Portrait Réalisateur 1">
-          <div class="name">Nom Prénom</div>
-          <div class="role">Réalisateur</div>
-        </article>
+    <!-- 2) SOUS LA VIDÉO : FOND NOIR, PHOTOS -->
+    <div class="below">
+      <section class="section">
+        <h2 class="subtitle">L’EQUIPE</h2>
+        <div class="team-grid dense">
+          <article class="person">
+            <img src="assets/img/Mathilde-Mevel.avif" alt="Portrait de Mathilde Mevel">
+            <div class="name">Mathilde Mevel</div>
+            <div class="role">Producteur</div>
+          </article>
 
-        <article class="person">
-          <img src="assets/img/teste2.avif" alt="Portrait Réalisateur 2">
-          <div class="name">Nom Prénom</div>
-          <div class="role">Réalisateur</div>
-        </article>
+          <article class="person">
+            <img src="assets/img/paul-leblanc.avif" alt="Portrait de Paul Leblanc">
+            <div class="name">Paul Leblanc</div>
+            <div class="role">Producteur</div>
+          </article>
 
-        <article class="person">
-          <img src="assets/img/teste3.avif" alt="Portrait Directeur du son">
-          <div class="name">Nom Prénom</div>
-          <div class="role">Directeur du son</div>
-        </article>
+          <!-- Duplique au besoin -->
+          <article class="person">
+            <img src="assets/img/teste1.avif" alt="Portrait membre équipe">
+            <div class="name">Nom Prénom</div>
+            <div class="role">Producteur</div>
+          </article>
 
-        <article class="person">
-          <img src="assets/img/teste4.avif" alt="Portrait Directeur de la photo">
-          <div class="name">Nom Prénom</div>
-          <div class="role">Directeur de la photo</div>
-        </article>
+          <article class="person">
+            <img src="assets/img/teste4.avif" alt="Portrait membre équipe">
+            <div class="name">Nom Prénom</div>
+            <div class="role">Producteur</div>
+          </article>
+        </div>
+      </section>
 
-        <!-- Ajoute autant de cartes que nécessaire -->
-      </div>
-    </section>
+      <section class="section">
+        <h2 class="subtitle">Équipe Technique</h2>
+        <div class="team-grid dense">
+          <article class="person">
+            <img src="assets/img/teste1.avif" alt="Portrait Réalisateur 1">
+            <div class="name">Nom Prénom</div>
+            <div class="role">Réalisateur</div>
+          </article>
+
+          <article class="person">
+            <img src="assets/img/teste2.avif" alt="Portrait Réalisateur 2">
+            <div class="name">Nom Prénom</div>
+            <div class="role">Réalisateur</div>
+          </article>
+
+          <article class="person">
+            <img src="assets/img/teste3.avif" alt="Portrait Directeur du son">
+            <div class="name">Nom Prénom</div>
+            <div class="role">Directeur du son</div>
+          </article>
+
+          <article class="person">
+            <img src="assets/img/teste4.avif" alt="Portrait Directeur de la photo">
+            <div class="name">Nom Prénom</div>
+            <div class="role">Directeur de la photo</div>
+          </article>
+        </div>
+      </section>
+    </div>
   </main>
 
-  <!-- JS : hauteur bandeau + transition entre pages -->
+  <!-- JS : hauteur bandeau + transitions -->
   <script>
     (function(){
-      // calcule la hauteur du bandeau d'écritures
+      // hauteur du bandeau d'écritures
       const tw = document.getElementById('tw');
       function setH(){ document.documentElement.style.setProperty('--twH', (tw?tw.offsetHeight:0) + 'px'); }
       setH(); addEventListener('resize', setH);
 
-      // affiche la page (fade-in), y compris via bfcache
+      // show (bfcache inclus)
       function showPage(){ document.body.classList.add('is-loaded'); }
-      window.addEventListener('DOMContentLoaded', showPage);
-      window.addEventListener('pageshow', showPage);
+      addEventListener('DOMContentLoaded', showPage);
+      addEventListener('pageshow', showPage);
 
-      // intercepte les liens internes pour fade-out avant navigation
+      // fade-out avant navigation
       document.addEventListener('click', function(e){
         const a = e.target.closest('a[href]');
         if(!a) return;
-
         if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
         if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
 
@@ -319,9 +301,8 @@
         if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
 
         const url = new URL(href, location.href);
-        const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
-        const sameOrigin = url.origin === location.origin;
-        if(!isHttp || !sameOrigin) return;
+        if(!(url.protocol === 'http:' || url.protocol === 'https:')) return;
+        if(url.origin !== location.origin) return;
 
         e.preventDefault();
         document.body.classList.remove('is-loaded');
