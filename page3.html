@@ -35,9 +35,7 @@
         opacity var(--page-xdur) var(--page-xease),
         transform var(--page-xdur) var(--page-xease);
     }
-    /* visible après chargement */
     body.is-loaded{ opacity:1; transform:none; }
-    /* fade-out au départ */
     body.is-exiting{ opacity:0; transform:translateY(8px); }
 
     /* ===== FOND ===== */
@@ -61,11 +59,10 @@
 
     /* ===== BANDEAU “écritures” cliquable ===== */
     .top-words{
-      position:fixed; left:0; right:0; top:56px;     /* sous la nav */
+      position:fixed; left:0; right:0; top:56px;
       padding: clamp(6px, 2.5vh, 28px) clamp(12px, 3vw, 40px);
       display:grid; grid-template-columns: 1fr auto; align-items:center;
-      pointer-events:auto;                           /* autorise les clics */
-      z-index:9;                                     /* au-dessus du contenu */
+      pointer-events:auto; z-index:9;
     }
     @media (max-width:700px){ .top-words{ top:52px; } }
 
@@ -74,7 +71,6 @@
       gap: clamp(28px, 9vw, 160px);
       flex-wrap:wrap;
     }
-
     .word-btn{
       display:inline-flex; align-items:center; justify-content:center;
       font-family:'Chewy', cursive;
@@ -84,7 +80,7 @@
       text-shadow:0 2px 8px rgba(0, 0, 0, 0.55);
       -webkit-text-stroke:.8px rgba(0, 0, 0, 0.5);
       white-space:nowrap; opacity:.98;
-      padding:.2rem .4rem; border-radius:.5rem;      /* look texte pur, léger padding */
+      padding:.2rem .4rem; border-radius:.5rem;
       transition:opacity .15s ease, transform .15s ease;
     }
     .word-btn:hover{ opacity:1; transform:translateY(-1px) }
@@ -144,6 +140,29 @@
       text-shadow:0 2px 8px rgba(0,0,0,.55);
     }
 
+    /* === MODE COMPACT : plus de personnes par ligne === */
+    .team-grid.dense{
+      gap: clamp(8px, 1vw, 16px);
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    .team-grid.dense .person{ padding:10px; border-radius:14px; }
+    .team-grid.dense .person img{
+      aspect-ratio: 3 / 4;     /* un peu moins haut que 4/5 */
+      border-radius:12px;
+    }
+    .team-grid.dense .name{
+      font-size: clamp(14px, 1.6vw, 18px);
+    }
+    .team-grid.dense .role{
+      font-size: clamp(12px, 1.2vw, 14px);
+      opacity:.9;
+    }
+    @media (min-width:1400px){
+      .team-grid.dense{
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      }
+    }
+
     /* ===== Responsive ===== */
     @media (max-width:700px){
       :root{ --navH:52px }
@@ -155,6 +174,14 @@
     @media (prefers-reduced-motion: reduce){
       body{ transition:none !important; transform:none !important; opacity:1 !important; }
       .word-btn{ transition:none!important; animation:none!important; }
+    }
+
+    /* Cacher le menu (nav) sur téléphone + offsets */
+    @media (max-width:700px){
+      .nav{ display:none !important; }
+      .top-words{ top:0 !important; }
+      :root{ --navH: 0px; }
+      .content{ padding-top: calc(var(--twH, 84px)) !important; }
     }
   </style>
 </head>
@@ -206,7 +233,7 @@
     <!-- L'EQUIPE -->
     <h2 class="subtitle">L’EQUIPE</h2>
     <section class="section">
-      <div class="team-grid">
+      <div class="team-grid dense">
         <article class="person">
           <img src="assets/img/Mathilde Mevel.jpeg" alt="Portrait de Mathilde Mevel">
           <div class="name">Mathilde Mevel</div>
@@ -218,13 +245,26 @@
           <div class="name">Paul Leblanc</div>
           <div class="role">Producteur</div>
         </article>
+
+        <!-- Exemples supplémentaires (tu peux dupliquer ces blocs) -->
+        <article class="person">
+          <img src="assets/img/teste1.jpeg" alt="Portrait membre équipe">
+          <div class="name">Nom Prénom</div>
+          <div class="role">Producteur</div>
+        </article>
+
+        <article class="person">
+          <img src="assets/img/teste2.jpg" alt="Portrait membre équipe">
+          <div class="name">Nom Prénom</div>
+          <div class="role">Producteur</div>
+        </article>
       </div>
     </section>
 
     <!-- EQUIPE TECHNIQUE -->
     <h2 class="subtitle">Équipe Technique</h2>
     <section class="section">
-      <div class="team-grid">
+      <div class="team-grid dense">
         <article class="person">
           <img src="assets/img/teste1.jpeg" alt="Portrait Réalisateur 1">
           <div class="name">Nom Prénom</div>
@@ -248,6 +288,8 @@
           <div class="name">Nom Prénom</div>
           <div class="role">Directeur de la photo</div>
         </article>
+
+        <!-- Ajoute autant de cartes que nécessaire -->
       </div>
     </section>
   </main>
@@ -270,12 +312,10 @@
         const a = e.target.closest('a[href]');
         if(!a) return;
 
-        // Laisse passer Ctrl/Cmd/Shift/Alt, clic milieu, download, target=_blank, etc.
         if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
         if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
 
         const href = a.getAttribute('href');
-        // ignore ancres, mailto, tel et autres protocoles
         if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
 
         const url = new URL(href, location.href);
@@ -286,7 +326,7 @@
         e.preventDefault();
         document.body.classList.remove('is-loaded');
         document.body.classList.add('is-exiting');
-        setTimeout(()=>{ location.href = url.href; }, 320); // = --page-xdur
+        setTimeout(()=>{ location.href = url.href; }, 320);
       }, true);
     })();
   </script>

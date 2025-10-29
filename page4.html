@@ -137,6 +137,15 @@
       body{ transition:none !important; transform:none !important; opacity:1 !important; }
       .word-btn{ transition:none!important; animation:none!important; }
     }
+
+    /* Cacher le menu (nav) sur téléphone et réajuster les offsets */
+    @media (max-width:700px){
+      .nav{ display:none !important; }
+      .top-words{ top:0 !important; }
+      :root{ --navH: 0px; }
+      .content{ padding-top: calc(var(--twH, 84px)) !important; }
+    }
+    
   </style>
 </head>
 <body>
