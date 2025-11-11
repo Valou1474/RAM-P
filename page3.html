@@ -4,310 +4,262 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>RAME — À propos</title>
-  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+  <link rel="icon" href="assets/img/logopage.png" type="image/x-icon">
 
   <style>
-    :root{
-      --pink:#f72585; --pink-dark:#b5179e;
-      --blue:#3a0ca3; --blue-bright:#4361ee;
-      --nav-bg:#000; --nav-fg:#eee;
-      --pill:#111; --pill-border:#fff;
-      --navH:56px;
+    /* ==== POLICES LOCALES ==== */
+    @font-face{
+      font-family:"MontaserArabic";
+      src:url("assets/fonts/MontaserArabic-Bold.woff2") format("woff2");
+      font-weight:700; font-style:normal; font-display:swap;
+    }
+    @font-face{
+      font-family:"Univers";
+      src:url("assets/fonts/Univers-Book.woff2") format("woff2");
+      font-weight:400; font-style:normal; font-display:swap;
+    }
+    @font-face{
+      font-family:"Univers";
+      src:url("assets/fonts/Univers-Bold.woff2") format("woff2");
+      font-weight:700; font-style:normal; font-display:swap;
+    }
 
-      /* transition pages */
-      --page-xdur: 320ms;
-      --page-xease: cubic-bezier(.2,.6,.2,1);
+    :root{
+      --page-xdur:320ms;
+      --page-xease:cubic-bezier(.2,.6,.2,1);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
+    html{scroll-behavior:smooth}
     body{
-      margin:0; color:#fff; background:#000;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      margin:0; background:#000; color:#fff;
+      font-family:"Univers",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; /* texte = Univers normal */
       overflow:auto;
-
-      /* fade-in / out */
       opacity:0; transform:translateY(8px);
       transition:opacity var(--page-xdur) var(--page-xease), transform var(--page-xdur) var(--page-xease);
     }
     body.is-loaded{opacity:1; transform:none}
     body.is-exiting{opacity:0; transform:translateY(8px)}
 
-    /* ===== FOND VIDÉO ===== */
-    .bg{position:fixed; inset:0; z-index:-2; overflow:hidden;}
-    .bg video,.bg img{width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.05) saturate(1.05);}
-    .bg::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35)); z-index:1;}
+    /* ==== FOND VIDÉO ==== */
+    .bg{position:fixed; inset:0; z-index:-2; overflow:hidden}
+    .bg video,.bg img{width:100%; height:100%; object-fit:cover; display:block; filter:contrast(1.05) saturate(1.05)}
+    .bg::after{content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35)); z-index:1}
 
-    /* ===== NAV ===== */
-    .nav{
-      position:fixed; top:0; left:0; right:0; height:var(--navH);
-      display:flex; align-items:center; gap:.75rem;
-      padding:0 .75rem; background:var(--nav-bg); color:var(--nav-fg); z-index:10;
-    }
-    .nav a{ color:inherit; text-decoration:none; padding:.35rem .7rem; border-radius:.65rem; display:inline-flex; align-items:center; gap:.5rem; opacity:.9; }
-    .nav a:hover{opacity:1}
-    .nav .spacer{flex:1}
-    .nav .pill{background:var(--pill); border:1.5px solid var(--pill-border); font-weight:600;}
-
-    /* ===== BANDEAU “écritures” (cliquable) ===== */
+    /* ==== BANDEAU TOP ==== */
     .top-words{
-      position:fixed; left:0; right:0; top:56px;
-      padding: clamp(6px, 2.5vh, 28px) clamp(12px, 3vw, 40px);
+      position:fixed; left:0; right:0; top:0;
+      padding: clamp(12px, 4vh, 48px) clamp(20px, 5vw, 80px);
       display:grid; grid-template-columns: 1fr auto; align-items:center;
-      pointer-events:auto; z-index:9;
+      z-index:9;
     }
-    @media (max-width:700px){ .top-words{ top:52px; } }
-    .words-left{ display:flex; align-items:center; gap: clamp(28px, 9vw, 160px); flex-wrap:wrap; }
+    .words-left{display:flex; align-items:center; flex-wrap:wrap; gap: clamp(28px, 9vw, 160px)}
     .word-btn{
       display:inline-flex; align-items:center; justify-content:center;
-      font-family:'Chewy', cursive; font-size: clamp(20px, 2.6vw, 36px);
-      letter-spacing:.02em; color:#fff; text-decoration:none;
+      font-family:"Univers",sans-serif; font-weight:700; /* sous-titres/menu = Univers gras */
+      font-size:clamp(18px,2.4vw,30px); letter-spacing:.02em;
+      color:#fff; text-decoration:none; opacity:.98;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
-      -webkit-text-stroke:.8px rgba(0,0,0,.5);
-      white-space:nowrap; opacity:.98; padding:.2rem .4rem; border-radius:.5rem;
       transition:opacity .15s ease, transform .15s ease;
     }
-    .word-btn:hover{ opacity:1; transform:translateY(-1px) }
-    .word-btn:focus-visible{ outline:2px dashed rgba(255,255,255,.8); outline-offset:3px; }
-    .brand{ justify-self:end; font-family:'Chewy', cursive; font-size: clamp(20px, 2.6vw, 36px); }
+    .word-btn[aria-current="page"]{opacity:1}
+    .word-btn:hover{opacity:1; transform:translateY(-1px)}
 
-    /* ===== CONTENU (offset nav+bandeau) ===== */
-    .content{ padding-top: calc(var(--navH) + var(--twH, 84px)); }
+    .brand-logo{
+      display:inline-block; width:auto; height:auto; padding:0;
+      background:transparent; border:none; backdrop-filter:none;
+      box-shadow:none; border-radius:0; transform:none; justify-self:end;
+    }
+    .brand-logo img{display:block; width:clamp(96px,10vw,160px); height:auto}
 
-    /* ===== HERO À PROPOS SUR LA VIDÉO ===== */
-    .hero-about{
-      min-height: 56vh;              /* hauteur de la zone où la vidéo reste visible */
-      display:grid; place-items:center;
-      position:relative; text-align:center; padding: 1.2rem 1rem 3rem;
+    /* ==== HERO (vidéo seule + bouton descente) ==== */
+    .hero{
+      min-height:100svh; display:grid; place-items:end center;
+      position:relative; padding-bottom:12vh;
     }
-    .hero-about .glass{
-      background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.25);
-      backdrop-filter:blur(6px); border-radius:16px; padding:1.2rem 1.4rem;
-      box-shadow:0 10px 40px rgba(0,0,0,.35); max-width: 1100px; margin: 0 auto;
+    .to-content{
+      position:absolute; left:50%; bottom:4.5vh; transform:translateX(-50%);
+      display:inline-flex; align-items:center; justify-content:center;
+      width:52px; height:52px; border-radius:50%;
+      background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.28);
+      backdrop-filter:blur(4px);
+      transition:transform .15s ease, opacity .15s ease;
     }
-    .hero-about .title{
-      font-family:'Chewy', cursive; font-size: clamp(26px, 3.2vw, 42px);
-      letter-spacing:.02em; margin: 0 0 1rem; text-shadow:0 2px 8px rgba(0,0,0,.55);
-    }
-    .hero-about .para{ max-width: 70ch; margin: 0 auto; line-height:1.6; opacity:.95; }
+    .to-content:hover{transform:translateX(-50%) translateY(-2px); opacity:.95}
+    .to-content img{width:36px; height:auto; display:block}
 
-    /* petit fondu vers le noir au bas du hero */
-    .hero-about::after{
-      content:""; position:absolute; left:0; right:0; bottom:-1px; height: 80px;
-      background: linear-gradient(to bottom, rgba(0,0,0,0), #000 80%);
-      pointer-events:none;
+    /* ==== CONTENU ==== */
+    .content-wrap{
+      position:relative; z-index:1; background:#000;
+      padding: calc(var(--twH,84px) + 24px) 1rem 6rem;
+      border-top:1px solid rgba(255,255,255,.08);
     }
+    .section{max-width:1100px; margin:0 auto; padding:0 1rem}
 
-    /* ===== ZONE SOUS LA VIDÉO (fond noir opaque) ===== */
-    .below{
-      background:#000;               /* masque la vidéo */
-      position:relative;
-      padding: 2rem 0 4rem;          /* vertical seulement; le conteneur parent fait la largeur */
-    }
-    .section{ max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
+    /* Grande image pleine largeur */
+    .bleed{width:100vw; margin-left:calc(50% - 50vw); margin-right:calc(50% - 50vw)}
+    .bleed img{display:block; width:100%; height:auto}
 
-    .subtitle{
-      font-family:'Chewy', cursive; text-align:center;
-      margin: 0 0 1rem; font-size: clamp(22px, 2.8vw, 34px);
+    /* Titres/Sous-titres/texte */
+    .title,.headline{
+      font-family:"MontaserArabic",serif; font-weight:700; /* TITRES = Montaser Arabic gras */
+      font-size:clamp(28px,3.4vw,48px); letter-spacing:.02em;
+      margin: 1.6rem 0 .4rem; text-align:center;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
     }
+    .subtitle{
+      font-family:"Univers",sans-serif; font-weight:700; /* SOUS-TITRES = Univers gras */
+      font-size:clamp(22px,3vw,40px); text-align:center;
+      margin: 2.2rem 0 1.2rem; text-shadow:0 2px 8px rgba(0,0,0,.55);
+    }
+    .lead{
+      font-family:"Univers",sans-serif; font-weight:400; /* TEXTE = Univers normal */
+      font-size:clamp(15px,1.3vw,18px); line-height:1.65; opacity:.95;
+      max-width:72ch; margin:0 auto 1.6rem; text-align:center;
+    }
 
-    /* ===== TEAM GRID ===== */
+    /* Équipe 2×2, sans cadres */
     .team-grid{
-      display:grid; gap: clamp(16px, 2.2vw, 26px);
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      margin-top: 1rem;
+      display:grid;
+      grid-template-columns: repeat(2, minmax(240px, 420px));
+      justify-content:center;
+      column-gap: clamp(40px, 8vw, 140px);
+      row-gap: clamp(40px, 6vw, 100px);
     }
-    .person{
-      text-align:center; padding:14px; border-radius:18px;
-      background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 8px 28px rgba(0,0,0,.28);
+    .person{text-align:center}
+    .person img{width:100%; height:auto; display:block; border-radius:0; box-shadow:none}
+    .name{
+      font-family:"Univers",sans-serif; font-weight:700; /* nom = Univers gras */
+      font-size:clamp(16px,1.6vw,22px); margin:.8rem 0 .2rem;
     }
-    .person img{
-      width:100%; aspect-ratio: 4/5; object-fit:cover;
-      border-radius:14px; display:block;
-      box-shadow:0 8px 24px rgba(0,0,0,.35);
-      margin-bottom:.7rem;
-    }
-    .person .name{
-      font-family:'Chewy', cursive;
-      font-size: clamp(18px, 2.2vw, 26px);
-      letter-spacing:.02em; margin:.2rem 0 .15rem;
-    }
-    .person .role{ font-size:.95rem; opacity:.9; letter-spacing:.02em; }
-
-    /* Grille compacte (plus de cartes par ligne) */
-    .team-grid.dense{
-      gap: clamp(8px, 1vw, 16px);
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    }
-    .team-grid.dense .person{ padding:10px; border-radius:14px; }
-    .team-grid.dense .person img{ aspect-ratio: 3 / 4; border-radius:12px; }
-    .team-grid.dense .name{ font-size: clamp(14px, 1.6vw, 18px); }
-    .team-grid.dense .role{ font-size: clamp(12px, 1.2vw, 14px); opacity:.9; }
-    @media (min-width:1400px){
-      .team-grid.dense{ grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .role{
+      font-family:"Univers",sans-serif; font-weight:400; /* rôle = Univers normal */
+      font-size:clamp(13px,1.2vw,18px); opacity:.95;
     }
 
     /* Responsive */
     @media (max-width:700px){
-      :root{ --navH:52px }
-      .brand{display:none;}
-      /* cacher la nav en haut à droite sur téléphone et réajuster */
-      .nav{ display:none !important; }
-      .top-words{ top:0 !important; }
-      :root{ --navH: 0px; }
-      .content{ padding-top: calc(var(--twH, 84px)) !important; }
+      .words-left{gap: clamp(18px,8vw,48px)}
+      .hero{padding-bottom:10vh}
+      .to-content{bottom:3.5vh}
+      .content-wrap{padding: calc(var(--twH,72px) + 16px) 0 4rem}
+      .team-grid{grid-template-columns: 1fr}
+      .person img{max-width:520px; margin:0 auto}
     }
 
-    /* Accessibilité: moins d'anim si demandé */
-    @media (prefers-reduced-motion: reduce){
-      body{ transition:none !important; transform:none !important; opacity:1 !important; }
-      .word-btn{ transition:none!important; }
+    @media (prefers-reduced-motion:reduce){
+      body{transition:none!important; transform:none!important; opacity:1!important}
+      .word-btn,.brand-logo,.to-content{transition:none!important}
     }
   </style>
 </head>
 <body>
 
-  <!-- FOND -->
+  <!-- Fond vidéo -->
   <div class="bg" aria-hidden="true">
     <video src="assets/video/page3.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
   </div>
 
-  <!-- NAV (Page 3 active) -->
-  <nav class="nav" role="navigation" aria-label="Navigation principale">
-    <div class="spacer"></div>
-    <a href="index.html">Page 1</a>
-    <a href="page2.html">Page 2</a>
-    <a class="pill" href="page3.html" aria-current="page">Page 3</a>
-    <a href="page4.html">Page 4</a>
-  </nav>
-
-  <!-- Bandeau d'écritures -->
+  <!-- Bandeau top -->
   <div class="top-words" id="tw">
     <nav class="words-left" aria-label="Raccourcis">
       <a class="word-btn" href="page2.html">Production</a>
       <a class="word-btn" href="page3.html" aria-current="page">À propos</a>
       <a class="word-btn" href="page4.html">Contact</a>
     </nav>
-    <a class="brand word-btn" href="index.html">RAME Production</a>
+    <a class="brand-logo" href="index.html" aria-label="Accueil">
+      <img src="assets/img/logo.png" alt="RAME">
+    </a>
   </div>
 
-  <!-- CONTENU -->
-  <main class="content">
-    <!-- 1) HERO AU-DESSUS DE LA VIDÉO -->
-    <section class="hero-about" aria-label="À propos">
-      <div class="glass">
-        <h1 class="title">A PROPOS</h1>
-        <p class="para">
-          heiruhfeiugheiuhfiugriuqgiuehrfqhkrefqheri
-          ughiuqerhiufghqk;uergkqherkj;ghqk;uerhgku;
-          qhkerhg;wher;ghr;kwqher;kjgh;qwkhergk;jh
-          querhgi;qwheiurhgjqwh;ekrghkjqwherouhgt
-          owh;drfhglw;khrlghqwoierghlqwher;klhgljk
-          qherkjghq;kjergk;jqhek;jgh;kthr;kghkwljhe
-          rk;jghkwherghw;kljhergkt;hwk;rthg;whrtgi
-          ouhw;iourthgo;qherhrho;ghwhotghwohgtohw
-          ;ohghrtwergt;hrklhoiwghg;rthgouireho;gher
-          kl;hgk;whrt;oh4
-        </p>
-      </div>
+  <!-- Première vue -->
+  <section class="hero" aria-label="Haut de page À propos">
+    <a class="to-content" href="#content" aria-label="Aller au contenu">
+      <img src="assets/img/logo.png" alt="">
+    </a>
+  </section>
+
+  <!-- Contenu -->
+  <main id="content" class="content-wrap">
+    <!-- Grande image -->
+    <div class="bleed">
+      <img src="assets/img/apropos-large.jpg" alt="Présentation de RAME">
+    </div>
+
+    <!-- Titre (Montaser) + texte (Univers normal) -->
+    <section class="section">
+      <h2 class="title">Titre de section</h2>
+      <p class="lead">
+        Texte d’introduction sous la grande image. Remplace ce texte par votre message :
+        mission, valeurs, ou un court résumé.
+      </p>
     </section>
 
-    <!-- 2) SOUS LA VIDÉO : FOND NOIR, PHOTOS -->
-    <div class="below">
-      <section class="section">
-        <h2 class="subtitle">L’EQUIPE</h2>
-        <div class="team-grid dense">
-          <article class="person">
-            <img src="assets/img/Mathilde-Mevel.avif" alt="Portrait de Mathilde Mevel">
-            <div class="name">Mathilde Mevel</div>
-            <div class="role">Producteur</div>
-          </article>
+    <!-- L’equipe : 2 par 2, sans cadre -->
+    <section class="section">
+      <h2 class="title">L’equipe</h2>
+      <div class="team-grid">
+        <article class="person">
+          <img src="assets/img/Mathilde-Mevel.avif" alt="Portrait de Mathilde Mevel">
+          <div class="name">Mathilde Mevel</div>
+          <div class="role">Cofondatrice & Productrice exécutive</div>
+        </article>
 
-          <article class="person">
-            <img src="assets/img/paul-leblanc.avif" alt="Portrait de Paul Leblanc">
-            <div class="name">Paul Leblanc</div>
-            <div class="role">Producteur</div>
-          </article>
+        <article class="person">
+          <img src="assets/img/paul-leblanc.avif" alt="Portrait de Paul Leblanc">
+          <div class="name">Paul Leblanc</div>
+          <div class="role">Cofondateur & Producteur exécutif</div>
+        </article>
 
-          <!-- Duplique au besoin -->
-          <article class="person">
-            <img src="assets/img/teste1.avif" alt="Portrait membre équipe">
-            <div class="name">Nom Prénom</div>
-            <div class="role">Producteur</div>
-          </article>
+        <!-- Duplique si besoin -->
+        <article class="person">
+          <img src="assets/img/Matias-Renaud.avif" alt="Portrait membre équipe">
+          <div class="name">Matias Renaud</div>
+          <div class="role">Réalisateur</div>
+        </article>
 
-          <article class="person">
-            <img src="assets/img/teste4.avif" alt="Portrait membre équipe">
-            <div class="name">Nom Prénom</div>
-            <div class="role">Producteur</div>
-          </article>
-        </div>
-      </section>
+        <article class="person">
+          <img src="assets/img/Louis-Gre_goire-_Click_.avif" alt="Portrait membre équipe">
+          <div class="name">Louis Gregoire</div>
+          <div class="role">Réalisateur</div>
+        </article>
 
-      <section class="section">
-        <h2 class="subtitle">Équipe Technique</h2>
-        <div class="team-grid dense">
-          <article class="person">
-            <img src="assets/img/teste1.avif" alt="Portrait Réalisateur 1">
-            <div class="name">Nom Prénom</div>
-            <div class="role">Réalisateur</div>
-          </article>
+        <article class="person">
+          <img src="assets/img/Jay-Lavalle_e-_Inge_nieur-Son-_-Monteur_.avif" alt="Portrait membre équipe">
+          <div class="name">Jay Lavallée</div>
+          <div class="role">Ingénieur Son & Monteur</div>
+        </article>
 
-          <article class="person">
-            <img src="assets/img/teste2.avif" alt="Portrait Réalisateur 2">
-            <div class="name">Nom Prénom</div>
-            <div class="role">Réalisateur</div>
-          </article>
-
-          <article class="person">
-            <img src="assets/img/teste3.avif" alt="Portrait Directeur du son">
-            <div class="name">Nom Prénom</div>
-            <div class="role">Directeur du son</div>
-          </article>
-
-          <article class="person">
-            <img src="assets/img/teste4.avif" alt="Portrait Directeur de la photo">
-            <div class="name">Nom Prénom</div>
-            <div class="role">Directeur de la photo</div>
-          </article>
-        </div>
-      </section>
-    </div>
+        <article class="person">
+          <img src="assets/img/Le_vy-Martel-_Directeur-Photo_.avif" alt="Portrait membre équipe">
+          <div class="name">Lévy Martel</div>
+          <div class="role">Directeur Photo</div>
+        </article>
+      </div>
+    </section>
   </main>
 
-  <!-- JS : hauteur bandeau + transitions -->
   <script>
     (function(){
-      // hauteur du bandeau d'écritures
-      const tw = document.getElementById('tw');
-      function setH(){ document.documentElement.style.setProperty('--twH', (tw?tw.offsetHeight:0) + 'px'); }
+      const tw=document.getElementById('tw');
+      function setH(){ document.documentElement.style.setProperty('--twH',(tw?tw.offsetHeight:0)+'px'); }
       setH(); addEventListener('resize', setH);
 
-      // show (bfcache inclus)
       function showPage(){ document.body.classList.add('is-loaded'); }
       addEventListener('DOMContentLoaded', showPage);
       addEventListener('pageshow', showPage);
 
-      // fade-out avant navigation
       document.addEventListener('click', function(e){
-        const a = e.target.closest('a[href]');
-        if(!a) return;
-        if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-        if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
-
-        const href = a.getAttribute('href');
-        if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
-
-        const url = new URL(href, location.href);
-        if(!(url.protocol === 'http:' || url.protocol === 'https:')) return;
-        if(url.origin !== location.origin) return;
-
+        const a=e.target.closest('a[href]'); if(!a) return;
+        if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0) return;
+        if(a.hasAttribute('download') || (a.target && a.target!=='_self')) return;
+        const href=a.getAttribute('href'); if(!href||href.startsWith('#')||href.startsWith('mailto:')||href.startsWith('tel:')) return;
+        const url=new URL(href,location.href);
+        if(!(url.protocol==='http:'||url.protocol==='https:')) return;
+        if(url.origin!==location.origin) return;
         e.preventDefault();
-        document.body.classList.remove('is-loaded');
-        document.body.classList.add('is-exiting');
-        setTimeout(()=>{ location.href = url.href; }, 320);
+        document.body.classList.remove('is-loaded'); document.body.classList.add('is-exiting');
+        setTimeout(()=>{ location.href=url.href; }, 320);
       }, true);
     })();
   </script>

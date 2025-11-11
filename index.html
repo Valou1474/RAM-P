@@ -4,24 +4,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>RAME</title>
-  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
-
-  <!-- Police fun pour "Entrer" (optionnel) -->
+  <link rel="icon" href="assets/img/logopage.png" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      /* Couleurs principales (modifie ici si tu veux) */
-      --pink:#f72585;
-      --pink-dark:#b5179e;
-      --blue:#3a0ca3;
-      --blue-bright:#4361ee;
-      --nav-bg:#000;
-      --nav-fg:#eee;
-      --pill:#111;
-      --pill-border:#fff;
-
-      /* ↓ Durée & easing de transition de page */
+      --pink:#f72585; --pink-dark:#b5179e;
+      --blue:#3a0ca3; --blue-bright:#4361ee;
       --page-xdur: 320ms;
       --page-xease: cubic-bezier(.2,.6,.2,1);
     }
@@ -29,222 +18,106 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0;
-      color:#fff;
+      margin:0; color:#fff; background:#000;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow:hidden; /* pas de scroll, écran plein */
-      background:#000;
+      overflow:hidden;
 
-      /* ↓ Effet fade-in initial */
-      opacity:0;
-      transform:translateY(8px);
+      /* transition page */
+      opacity:0; transform:translateY(8px);
       transition:
         opacity var(--page-xdur) var(--page-xease),
         transform var(--page-xdur) var(--page-xease);
     }
-    /* état visible une fois chargée */
-    body.is-loaded{
-      opacity:1;
-      transform:none;
-    }
-    /* fade-out au départ */
-    body.is-exiting{
-      opacity:0;
-      transform:translateY(8px);
-    }
+    body.is-loaded{ opacity:1; transform:none; }
+    body.is-exiting{ opacity:0; transform:translateY(8px); }
 
-    /* ===== VIDEO DE FOND ===== */
-    .bg{
-      position:fixed; inset:0;
-      z-index:-2;
-      overflow:hidden;
-    }
+    /* ===== FOND VIDÉO ===== */
+    .bg{ position:fixed; inset:0; z-index:-2; overflow:hidden; }
     .bg video,.bg img{
-      width:100%; height:100%;
-      object-fit:cover;
-      display:block;
+      width:100%; height:100%; object-fit:cover; display:block;
       filter:contrast(1.05) saturate(1.05);
     }
     .bg::after{
-      content:"";
-      position:absolute; inset:0;
+      content:""; position:absolute; inset:0;
       background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35));
       z-index:1;
     }
 
-    /* ===== NAVBAR ===== */
-    .nav{
-      position:fixed; top:0; left:0; right:0;
-      height:56px;
-      display:flex; align-items:center; gap:.75rem;
-      padding:0 .75rem;
-      background:var(--nav-bg);
-      color:var(--nav-fg);
-      z-index:10;
-    }
-    .nav a{
-      color:inherit; text-decoration:none;
-      padding:.35rem .7rem;
-      border-radius:.65rem;
-      display:inline-flex; align-items:center; gap:.5rem;
-      opacity:.9;
-    }
-    .nav a:hover{opacity:1}
-    .nav .spacer{flex:1}
-    .nav .pill{
-      background:var(--pill);
-      border:1.5px solid var(--pill-border);
-      font-weight:600;
-    }
-
-    /* ===== ZONE CENTRALE ===== */
+    /* ===== HERO ===== */
     .hero{
-      position:fixed; inset:56px 0 0 0; /* sous la nav */
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      gap:2.5rem;
-      padding:2rem;
-      text-align:center;
+      position:fixed; inset:0;            /* plein écran (pas de barre en haut) */
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      gap: clamp(24px, 5vmin, 48px);
+      padding: 2rem; text-align:center;
     }
 
-    /* Les deux cercles */
+    /* LOGO perso */
     .logo{
-      position:relative;
-      width:min(62vmin,720px);
-      height:min(62vmin,720px);
-      display:grid;
-      place-items:center;
+      display:grid; place-items:center;
     }
-    .dot{
-      position:absolute;
-      width:48%;
-      aspect-ratio:1/1;
-      border-radius:50%;
-      box-shadow:
-        0 0 0 10px rgba(0,0,0,.25),
-        0 0 40px 0 rgba(0,0,0,.35);
+    .logo img{
+      width: clamp(180px, 200vmin, 520px);   /* adapte la taille du logo */
+      height:auto; display:block;
+      filter: drop-shadow(0 12px 40px rgba(0,0,0,.45));
+      user-select:none; -webkit-user-drag:none;
     }
-    .dot.left{
-      left:10%;
-      background:
-        radial-gradient(120% 100% at 30% 30%, #ff6bb7 0%, var(--pink) 45%, var(--pink-dark) 100%);
-      outline:10px solid rgba(255,0,128,.35);
-    }
-    .dot.right{
-      right:10%;
-      background:
-        radial-gradient(120% 100% at 30% 30%, #7a5cff 0%, var(--blue-bright) 45%, var(--blue) 100%);
-      outline:10px solid rgba(90,0,255,.35);
-    }
-    .dot.right{ transform:translateX(-4%); }
-    .dot.left  { transform:translateX(4%);  }
 
-    /* ===== BOUTON ENTRER ===== */
+    /* BOUTON ENTRER (plus gros) */
     .enter{
       font-family:'Chewy', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-size: clamp(22px, 3.2vw, 36px);
+      font-size: clamp(34px, 6.5vw, 72px);   /* >> plus grand << */
       letter-spacing:.03em;
-      color:#fff;
-      text-decoration:none;
-      padding:.35rem .9rem;
-      text-shadow:0 2px 10px rgba(0,0,0,.9);
-      -webkit-text-stroke: 1px rgba(0,0,0,.5);
+      color:#fff; text-decoration:none;
+      padding:.5rem 1.2rem;
+      text-shadow:0 3px 14px rgba(0,0,0,.9);
+      -webkit-text-stroke: 1px rgba(0,0,0,.6);
       transition: transform .15s ease, text-shadow .15s ease;
     }
     .enter:hover{
       transform:translateY(-2px) scale(1.02);
-      text-shadow:0 4px 14px rgba(0,0,0,1);
+      text-shadow:0 6px 18px rgba(0,0,0,1);
     }
 
-    /* ===== Responsive ===== */
-    @media (max-width:700px){
-      .nav{height:52px}
-      .hero{inset:52px 0 0 0; gap:2rem}
-      .dot{outline-width:8px}
-    }
-
-    :root{
-      --circle: clamp(160px, 28vw, 420px);
-      --enter-size: clamp(22px, 3.2vw, 48px);
-      --nav-size: clamp(12px, 1.3vw, 18px);
-    }
-    .circle{ width: var(--circle); height: var(--circle); }
-    .enter{ font-size: var(--enter-size); padding:.45rem 1rem; }
-    .navbar{ font-size: var(--nav-size); }
-
-    @media (max-width: 560px){
-      .navbar{ gap:.6rem; padding:.4rem .8rem; }
-      .circles{ transform: scale(.9); gap: 4vw; }
-      .enter{ margin-bottom: 6vh; }
-    }
-    @media (max-height: 580px) and (orientation: landscape){
-      .circles{ transform: scale(.8); }
-      .enter{ margin-bottom: 2vh; }
-    }
-
-    /* Accessibilité : moins d’animations si l’utilisateur le demande */
+    /* Accessibilité : moins d’anim si demandé */
     @media (prefers-reduced-motion: reduce){
       body{ transition:none !important; transform:none !important; opacity:1 !important; }
-      .circle, .enter{ transition: none !important; animation: none !important; }
+      .enter{ transition:none !important; }
     }
-
-    /* Cacher le menu (nav) sur téléphone et réajuster les offsets */
-    @media (max-width:700px){
-  /* 1) Masquer totalement la barre de navigation */
-      .nav{ display:none !important; }
-      .hero{ inset:0 0 0 0 !important; }
-      :root{ --navH: 0px; }
-      .content{ padding-top: calc(var(--twH, 84px)) !important; }
-    }
-
   </style>
 </head>
 <body>
 
-  <!-- VIDEO/IMAGE DE FOND -->
+  <!-- FOND -->
   <div class="bg" aria-hidden="true">
     <video src="assets/video/page1.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
   </div>
 
-  <!-- NAV BAR -->
-  <nav class="nav" role="navigation" aria-label="Navigation principale">
-    <div class="spacer"></div>
-    <a class="pill" href="page1.html" aria-current="page">Page 1</a>
-    <a href="page2.html">Page 2</a>
-    <a href="page3.html">Page 3</a>
-    <a href="page4.html">Page 4</a>
-  </nav>
-
   <!-- CONTENU CENTRAL -->
   <main class="hero">
-    <div class="logo" aria-hidden="true">
-      <div class="dot left"></div>
-      <div class="dot right"></div>
+    <!-- Ton logo -->
+    <div class="logo" aria-hidden="false">
+      <img src="assets/img/logo.png" alt="Logo RAME">
     </div>
 
-    <a class="enter" href="page2.html">Entrer</a>
+    <!-- Bouton -->
+    <a class="enter" href="page2.html" aria-label="Entrer sur le site">Entrer</a>
   </main>
 
-  <!-- Transition de page (fade-in/fade-out) -->
+  <!-- Transition de page -->
   <script>
-    // Affiche la page (fade-in), même en retour bfcache
     function showPage(){ document.body.classList.add('is-loaded'); }
-    window.addEventListener('DOMContentLoaded', showPage);
-    window.addEventListener('pageshow', showPage);
+    addEventListener('DOMContentLoaded', showPage);
+    addEventListener('pageshow', showPage);
 
-    // Intercepte liens internes pour lancer le fade-out avant de naviguer
     document.addEventListener('click', function(e){
       const a = e.target.closest('a[href]');
       if(!a) return;
 
-      // Laisse passer Ctrl/Cmd/Shift/Alt, clic milieu, download, target=_blank, etc.
       if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
 
       const href = a.getAttribute('href');
-      // ignore ancres, mailto, tel et protocoles non http(s)
       if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
 
       const url = new URL(href, location.href);
@@ -255,7 +128,7 @@
       e.preventDefault();
       document.body.classList.remove('is-loaded');
       document.body.classList.add('is-exiting');
-      setTimeout(()=>{ location.href = url.href; }, 320); // = --page-xdur
+      setTimeout(()=>{ location.href = url.href; }, 320);
     }, true);
   </script>
 </body>
