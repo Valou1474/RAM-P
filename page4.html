@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAME — Contact</title>
+  <link rel="icon" href="assets/img/logopage.png" type="image/x-icon">
+
+  <style>
+    /* ==== POLICES LOCALES ==== */
+    @font-face{
+      font-family:"MontaserArabic";
+      src:url("assets/fonts/MontaserArabic-Bold.woff2") format("woff2");
+      font-weight:700; font-style:normal; font-display:swap;
+    }
+    @font-face{
+      font-family:"Univers";
+      src:url("assets/fonts/Univers-Book.woff2") format("woff2");
+      font-weight:400; font-style:normal; font-display:swap;
+    }
+    @font-face{
+      font-family:"Univers";
+      src:url("assets/fonts/Univers-Bold.woff2") format("woff2");
+      font-weight:700; font-style:normal; font-display:swap;
+    }
+
+    :root{
+      --page-xdur: 320ms;
+      --page-xease: cubic-bezier(.2,.6,.2,1);
+      --glass-bg: rgba(0,0,0,.35); /* flou sans bord blanc */
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; color:#fff;
+      font-family:"Univers",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:#000; overflow:auto;
+
+      opacity:0; transform:translateY(8px);
+      transition: opacity var(--page-xdur) var(--page-xease),
+                  transform var(--page-xdur) var(--page-xease);
+    }
+    body.is-loaded{ opacity:1; transform:none; }
+    body.is-exiting{ opacity:0; transform:translateY(8px); }
+
+    /* ===== FOND ===== */
+    .bg{position:fixed; inset:0; z-index:-2; overflow:hidden;}
+    .bg video,.bg img{
+      width:100%; height:100%; object-fit:cover; display:block;
+      filter:contrast(1.05) saturate(1.05);
+    }
+    .bg::after{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35));
+      z-index:1;
+    }
+
+    /* ===== BANDEAU TOP (liens + logo) ===== */
+    .top-words{
+      position:fixed; left:0; right:0; top:0;
+      padding: clamp(12px, 4vh, 48px) clamp(20px, 5vw, 80px);
+      display:grid; grid-template-columns: 1fr auto; align-items:center;
+      z-index:9;
+    }
+    .words-left{
+      display:flex; align-items:center; flex-wrap:wrap;
+      gap: clamp(28px, 9vw, 160px);
+    }
+    .word-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family:"Univers",sans-serif; font-weight:700; /* sous-titres = Univers gras */
+      font-size:clamp(18px, 2.4vw, 30px);
+      letter-spacing:.02em; color:#fff; text-decoration:none; opacity:.98;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    .word-btn[aria-current="page"]{ opacity:1; }
+    .word-btn:hover{ opacity:1; transform:translateY(-1px); }
+
+    .brand-logo{
+      display:inline-block; width:auto; height:auto; padding:0;
+      background:transparent; border:none; backdrop-filter:none;
+      box-shadow:none; border-radius:0; transform:none; justify-self:end;
+    }
+    .brand-logo img{ display:block; width:clamp(96px,10vw,160px); height:auto; }
+
+    /* ===== CONTENU ===== */
+    .content{
+      padding-top: calc(var(--twH, 84px) + 12px); /* décalé sous le bandeau */
+    }
+
+    .hero{
+      display:grid; place-items:center;
+      min-height:44vh; text-align:center; position:relative;
+    }
+    .title{
+      font-family:"MontaserArabic",serif; font-weight:700; /* titres = Montaser Arabic gras */
+      font-size:clamp(28px, 3.4vw, 48px);
+      letter-spacing:.02em; margin:.2rem 0;
+      text-shadow:0 2px 10px rgba(0,0,0,.75);
+    }
+
+    /* Bloc infos contact — flou sans anneau blanc (pas de border) */
+    .info{
+      background:var(--glass-bg);
+      backdrop-filter:blur(6px);
+      border:none;                     /* <-- supprime le “rond blanc” */
+      border-radius:16px;
+      max-width:760px; margin:0 auto 10vh; padding:2.2rem 1.4rem;
+      text-align:center; box-shadow:0 10px 40px rgba(0,0,0,.35);
+    }
+    .brandTitle{
+      font-family:"MontaserArabic",serif; font-weight:700;
+      font-size:clamp(28px, 3.2vw, 42px);
+      letter-spacing:.02em; margin:0 0 1.1rem;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+    }
+    .lines{
+      display:grid; gap:.45rem;
+      font-family:"Univers",sans-serif; font-weight:400; /* texte = Univers normal */
+      font-size:clamp(16px, 1.4vw, 20px);
+    }
+    .lines a{ color:#fff; text-decoration:none; }
+    .lines a:hover{ opacity:.9 }
+
+    /* Responsive */
+    @media (max-width:700px){
+      .brand-logo img{ width: clamp(80px, 14vw, 120px); }
+      .info{ margin-bottom:8vh; }
+    }
+
+    /* Accessibilité */
+    @media (prefers-reduced-motion: reduce){
+      body{ transition:none !important; transform:none !important; opacity:1 !important; }
+      .word-btn{ transition:none!important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FOND -->
+  <div class="bg" aria-hidden="true">
+    <video src="assets/video/page4.mp4" autoplay muted loop playsinline poster="media/contact.jpg"></video>
+  </div>
+
+  <!-- BANDEAU (liens + logo) -->
+  <div class="top-words" id="tw">
+    <nav class="words-left" aria-label="Raccourcis">
+      <a class="word-btn" href="page2.html">Production</a>
+      <a class="word-btn" href="page3.html">À propos</a>
+      <a class="word-btn" href="page4.html" aria-current="page">Contact</a>
+    </nav>
+    <a class="brand-logo" href="index.html" aria-label="Accueil">
+      <img src="assets/img/logo.png" alt="RAME">
+    </a>
+  </div>
+
+  <!-- CONTENU -->
+  <main class="content">
+    <section class="hero" aria-label="En-tête Contact">
+      <h1 class="title">Contact</h1>
+    </section>
+
+    <section class="info" aria-label="Coordonnées">
+      <h2 class="brandTitle">RAME Production</h2>
+      <div class="lines">
+        <a href="mailto:production@rame.ca">production@rame.ca</a>
+        <a href="tel:4383657824">438.365.7824</a>
+        <span>Montréal</span>
+      </div>
+    </section>
+  </main>
+
+  <!-- JS : hauteur bandeau + transitions -->
+  <script>
+    (function(){
+      // hauteur du bandeau d'écritures
+      const tw = document.getElementById('tw');
+      function setH(){ document.documentElement.style.setProperty('--twH', (tw?tw.offsetHeight:0) + 'px'); }
+      setH(); addEventListener('resize', setH);
+
+      // fade-in (inclut bfcache)
+      function showPage(){ document.body.classList.add('is-loaded'); }
+      addEventListener('DOMContentLoaded', showPage);
+      addEventListener('pageshow', showPage);
+
+      // fade-out avant navigation
+      document.addEventListener('click', function(e){
+        const a = e.target.closest('a[href]'); if(!a) return;
+        if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0) return;
+        if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
+
+        const href = a.getAttribute('href');
+        if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+        const url = new URL(href, location.href);
+        if(!(url.protocol==='http:'||url.protocol==='https:')) return;
+        if(url.origin!==location.origin) return;
+
+        e.preventDefault();
+        document.body.classList.remove('is-loaded');
+        document.body.classList.add('is-exiting');
+        setTimeout(()=>{ location.href = url.href; }, 320);
+      }, true);
+    })();
+  </script>
+</body>
+</html>

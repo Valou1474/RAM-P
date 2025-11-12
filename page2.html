@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAME — Production</title>
+  <link rel="icon" href="assets/img/logopage.png" type="image/x-icon">
+
+  <!-- Polices locales -->
+  <style>
+    @font-face{
+      font-family:"Montaser Arabic";
+      src:url("assets/fonts/MontaserArabic-Bold.woff2") format("woff2");
+      font-weight:700; font-style:normal; font-display:swap;
+    }
+    @font-face{
+      font-family:"Univers";
+      src:url("assets/fonts/Univers-Regular.woff2") format("woff2");
+      font-weight:400; font-style:normal; font-display:swap;
+    }
+    @font-face{
+      font-family:"Univers";
+      src:url("assets/fonts/Univers-Bold.woff2") format("woff2");
+      font-weight:700; font-style:normal; font-display:swap;
+    }
+  </style>
+
+  <style>
+    :root{
+      --page-xdur:320ms;
+      --page-xease:cubic-bezier(.2,.6,.2,1);
+      --splash-delay:500ms;
+      --splash-dur:900ms;
+      --text-max:1100px;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; color:#fff; background:#000; overflow:auto;
+      font-family:"Univers", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+
+      opacity:0; transform:translateY(8px);
+      transition: opacity var(--page-xdur) var(--page-xease),
+                  transform var(--page-xdur) var(--page-xease);
+    }
+    body.is-loaded{ opacity:1; transform:none }
+    body.is-exiting{ opacity:0; transform:translateY(8px) }
+
+    /* ===== Fond vidéo ===== */
+    .bg{position:fixed; inset:0; z-index:-2; overflow:hidden}
+    .bg video,.bg img{
+      width:100%; height:100%; object-fit:cover; display:block;
+      filter:contrast(1.05) saturate(1.05);
+    }
+    .bg::after{
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.5));
+      z-index:1;
+    }
+
+    /* ===== Splash logo ===== */
+    .splash{
+      position:fixed; inset:0; z-index:10;
+      display:grid; place-items:center;
+      pointer-events:none;
+      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.45));
+      animation: splashOut var(--splash-dur) ease forwards;
+      animation-delay: var(--splash-delay);
+    }
+    .splash img{
+      width: clamp(180px, 200vmin, 520px);
+      height:auto; display:block;
+      filter: drop-shadow(0 12px 40px rgba(0,0,0,.45));
+      user-select:none; -webkit-user-drag:none;
+    }
+    @keyframes splashOut{
+      0%{opacity:1; transform:none}
+      60%{opacity:.6; transform:scale(.995)}
+      100%{opacity:0; transform:scale(.985)}
+    }
+
+    /* ===== Bandeau (boutons + logo) ===== */
+    .top-words{
+      position:fixed; left:0; right:0; top:0;
+      padding: clamp(12px, 4vh, 48px) clamp(20px, 5vw, 80px);
+      display:grid; grid-template-columns: 1fr auto; align-items:center;
+      z-index:9;
+    }
+    .words-left{
+      display:flex; align-items:center;
+      gap: clamp(24px, 8vw, 140px);
+      flex-wrap:wrap;
+    }
+    .word-btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      font-family:"Univers", Arial, sans-serif; font-weight:700;
+      font-size: clamp(18px, 2.2vw, 30px);
+      letter-spacing:.02em; color:#fff; text-decoration:none; opacity:.98;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+      -webkit-text-stroke:.4px rgba(0,0,0,.45);
+      padding:.15rem .35rem; border-radius:.4rem;
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    .word-btn:hover{ opacity:1; transform:translateY(-1px) }
+    .word-btn[aria-current="page"]{ opacity:1 }
+
+    .brand-logo{
+      display:inline-block; width:auto; height:auto; padding:0;
+      background:transparent; border:none; backdrop-filter:none;
+      box-shadow:none; border-radius:0; transform:none;
+    }
+    .brand-logo:hover{ transform: translateY(-1px) }
+    .brand-logo img{
+      display:block;
+      width: clamp(96px, 10vw, 160px);
+      height:auto;
+    }
+    @media (max-width:700px){
+      .brand-logo{ display:none }
+      .words-left{ gap: clamp(50px, 6vw, 60px) }
+    }
+
+    /* ===== Hero ===== */
+    .hero{
+      position:relative; z-index:2;
+      min-height: calc(100svh - 0px);
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;        /* centré vertical */
+      padding: calc(var(--twH, 96px) + 6vh) 1rem 12vh;   /* marge top = hauteur bandeau + 6vh */
+      text-align:center;
+      gap: clamp(24px, 6vh, 56px);
+    }
+    /* Logo plus gros et bien centré */
+    .hero-logo{
+      width: clamp(260px, 48vmin, 680px);  /* ++ plus gros */
+      height:auto; display:block;
+      margin-inline:auto;
+      filter: drop-shadow(0 12px 40px rgba(0,0,0,.45));
+      user-select:none; -webkit-user-drag:none;
+    }
+    /* Titre sous le logo, mais sans l’envoyer tout en bas */
+    .title{
+      font-family:"Montaser Arabic","Univers",Arial,sans-serif;
+      font-weight:700; letter-spacing:.02em;
+      font-size:clamp(32px, 6vw, 72px);
+      text-shadow:0 2px 12px rgba(0,0,0,.65);
+      margin: clamp(4vh, 8vh, 12vh) 0 0;   /* espace sous le logo */
+    }
+
+    /* Bouton/logo pour descendre au contenu */
+    .scroll-btn{
+      position:absolute; left:50%; bottom:28px; transform:translateX(-50%);
+      display:grid; place-items:center;
+      width:68px; height:68px; border-radius:50%;
+      background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.35);
+      backdrop-filter:blur(6px);
+      text-decoration:none;
+      transition:transform .15s ease;
+    }
+    .scroll-btn:hover{ transform:translateX(-50%) translateY(-2px) }
+    .scroll-btn img{ width:44px; height:auto; display:block; }
+
+    /* ===== Contenu sous la vidéo (fond noir) ===== */
+    #content{ scroll-margin-top: 96px; }
+    .content-block{
+      position:relative; z-index:0;
+      background:#000;
+      border-top:1px solid rgba(255,255,255,.1);
+      padding: clamp(28px, 6vw, 64px) 1rem 12vh;
+    }
+    .container{ max-width:var(--text-max); margin:0 auto }
+
+    .subtitle{
+      font-family:"Univers", Arial, sans-serif;
+      font-weight:700;
+      font-size:clamp(22px, 2.6vw, 36px);
+      letter-spacing:.02em; margin:0 0 .6rem;
+      text-shadow:0 2px 8px rgba(0,0,0,.55);
+    }
+    .para{
+      font-family:"Univers", Arial, sans-serif;
+      font-weight:400; opacity:.95;
+      font-size:clamp(15px, 1.25vw, 19px);
+      margin:.35rem 0 1rem;
+    }
+
+    @media (max-width:700px){
+      .scroll-btn{ width:62px; height:62px }
+      .scroll-btn img{ width:40px }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      html{scroll-behavior:auto}
+      .splash{ animation:none; opacity:0 }
+      body{ transition:none !important; transform:none !important; opacity:1 !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FOND VIDÉO -->
+  <div class="bg" aria-hidden="true">
+    <video src="assets/video/page2.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
+  </div>
+
+  <!-- LOGO splash -->
+  <div class="splash" aria-hidden="true">
+    <img src="assets/img/logopage1.png" alt="">
+  </div>
+
+  <!-- Bandeau de boutons -->
+  <div class="top-words" id="tw">
+    <nav class="words-left" aria-label="Raccourcis">
+      <a class="word-btn" href="page2.html" aria-current="page">Production</a>
+      <a class="word-btn" href="page3.html">À propos</a>
+      <a class="word-btn" href="page4.html">Contact</a>
+    </nav>
+    <a class="brand-logo" href="index.html" aria-label="Accueil">
+      <img src="assets/img/logo.png" alt="Logo RAME">
+    </a>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero" aria-label="En-tête Production">
+    <!-- Logo centré et plus gros -->
+    <img class="hero-logo" src="assets/img/Voiture-Site.png" alt="RAME">
+
+    <!-- Titre -->
+    <h1 class="title">Production</h1>
+
+    <!-- Bouton/logo pour descendre au contenu -->
+    <a class="scroll-btn" href="#content" aria-label="Aller au contenu">
+      <img src="assets/img/fleche.png" alt="fleche vers le bas">
+    </a>
+  </header>
+
+  <!-- CONTENU sur fond noir -->
+  <main id="content" class="content-block" aria-label="Contenu Production">
+    <div class="container">
+      <h2 class="subtitle">Notre approche</h2>
+      <p class="para">heiruhfeiugheiuhfiugriuqgiuehrfqhkrefqheri ughiuqerhiufghqk;uergkqherkj;ghqk;uerhgku…</p>
+
+      <h2 class="subtitle">Services</h2>
+      <p class="para">owh;drfhglw;khrlghqwoierghlqwher;klhgljk qherkjghq;kjergk;jqhek;jgh;kthr;kghkwljhe…</p>
+
+      <h2 class="subtitle">Réalisations</h2>
+      <p class="para">rk;jghkwherghw;kljhergkt;hwk;rthg;whrtgi ouhw;iourthgo;qherhrho;ghwhotghwohgtohw…</p>
+    </div>
+  </main>
+
+  <!-- JS -->
+  <script>
+    // Affiche la page (fade-in), y compris via bfcache
+    function showPage(){ document.body.classList.add('is-loaded'); }
+    addEventListener('DOMContentLoaded', showPage);
+    addEventListener('pageshow', showPage);
+
+    // Mesure la hauteur du bandeau pour ajuster les calages
+    (function(){
+      const tw = document.getElementById('tw');
+      function setTopWordsH(){
+        if(!tw) return;
+        document.documentElement.style.setProperty('--twH', tw.offsetHeight + 'px');
+        document.getElementById('content')?.style.setProperty('scroll-margin-top', `calc(var(--twH, 96px))`);
+      }
+      setTopWordsH();
+      addEventListener('resize', setTopWordsH);
+    })();
+
+    // Fade-out avant navigation (hors ancres/mail/tel)
+    document.addEventListener('click', function(e){
+      const a = e.target.closest('a[href]');
+      if(!a) return;
+
+      if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
+
+      const href = a.getAttribute('href');
+      if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+
+      const url = new URL(href, location.href);
+      const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
+      const sameOrigin = url.origin === location.origin;
+      if(!isHttp || !sameOrigin) return;
+
+      e.preventDefault();
+      document.body.classList.remove('is-loaded');
+      document.body.classList.add('is-exiting');
+      setTimeout(()=>{ location.href = url.href; }, 320);
+    }, true);
+  </script>
+</body>
+</html>
