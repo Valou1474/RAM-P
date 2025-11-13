@@ -9,13 +9,13 @@
   <style>
     /* ==== POLICES LOCALES ==== */
     @font-face{
-      font-family:"MontaserArabic";
+      font-family:"Montaser Arabic";
       src:url("assets/fonts/MontaserArabic-Bold.woff2") format("woff2");
       font-weight:700; font-style:normal; font-display:swap;
     }
     @font-face{
       font-family:"Univers";
-      src:url("assets/fonts/Univers-Book.woff2") format("woff2");
+      src:url("assets/fonts/Univers-Regular.woff2") format("woff2");
       font-weight:400; font-style:normal; font-display:swap;
     }
     @font-face{
@@ -27,27 +27,27 @@
     :root{
       --page-xdur: 320ms;
       --page-xease: cubic-bezier(.2,.6,.2,1);
-      --glass-bg: rgba(0,0,0,.35); /* flou sans bord blanc */
+      --glass-bg: rgba(0,0,0,.35);
     }
 
     *{box-sizing:border-box}
     html,body{height:100%}
     html{scroll-behavior:smooth}
     body{
-      margin:0; color:#fff;
+      margin:0; color:#fff; background:#000; overflow:auto;
       font-family:"Univers",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:#000; overflow:auto;
 
       opacity:0; transform:translateY(8px);
       transition: opacity var(--page-xdur) var(--page-xease),
                   transform var(--page-xdur) var(--page-xease);
+      -webkit-tap-highlight-color: transparent;
     }
     body.is-loaded{ opacity:1; transform:none; }
     body.is-exiting{ opacity:0; transform:translateY(8px); }
 
     /* ===== FOND ===== */
     .bg{position:fixed; inset:0; z-index:-2; overflow:hidden;}
-    .bg video,.bg img{
+    .bg video{
       width:100%; height:100%; object-fit:cover; display:block;
       filter:contrast(1.05) saturate(1.05);
     }
@@ -57,21 +57,21 @@
       z-index:1;
     }
 
-    /* ===== BANDEAU TOP (liens + logo) ===== */
+    /* ===== BANDEAU TOP ===== */
     .top-words{
       position:fixed; left:0; right:0; top:0;
-      padding: clamp(12px, 4vh, 48px) clamp(20px, 5vw, 80px);
+      padding: clamp(10px, 3.6vh, 36px) clamp(16px, 4.5vw, 64px);
       display:grid; grid-template-columns: 1fr auto; align-items:center;
       z-index:9;
     }
     .words-left{
       display:flex; align-items:center; flex-wrap:wrap;
-      gap: clamp(28px, 9vw, 160px);
+      gap: clamp(18px, 8vw, 120px);
     }
     .word-btn{
       display:inline-flex; align-items:center; justify-content:center;
-      font-family:"Univers",sans-serif; font-weight:700; /* sous-titres = Univers gras */
-      font-size:clamp(18px, 2.4vw, 30px);
+      font-family:"Univers",sans-serif; font-weight:700;
+      font-size:clamp(16px, 2.2vw, 28px);
       letter-spacing:.02em; color:#fff; text-decoration:none; opacity:.98;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
       transition:opacity .15s ease, transform .15s ease;
@@ -80,55 +80,59 @@
     .word-btn:hover{ opacity:1; transform:translateY(-1px); }
 
     .brand-logo{
-      display:inline-block; width:auto; height:auto; padding:0;
-      background:transparent; border:none; backdrop-filter:none;
-      box-shadow:none; border-radius:0; transform:none; justify-self:end;
+      justify-self:end; display:inline-block;
     }
-    .brand-logo img{ display:block; width:clamp(96px,10vw,160px); height:auto; }
+    .brand-logo img{ display:block; width:clamp(84px, 9.5vw, 150px); height:auto; }
 
     /* ===== CONTENU ===== */
-    .content{
-      padding-top: calc(var(--twH, 84px) + 12px); /* décalé sous le bandeau */
-    }
+    .content{ padding-top: calc(var(--twH, 84px) + 12px); }
 
     .hero{
+      min-height: 40vh;           /* visible même avec clavier mobile */
       display:grid; place-items:center;
-      min-height:44vh; text-align:center; position:relative;
+      text-align:center; position:relative;
+      padding: 2vh 1rem 0;
     }
     .title{
-      font-family:"MontaserArabic",serif; font-weight:700; /* titres = Montaser Arabic gras */
-      font-size:clamp(28px, 3.4vw, 48px);
+      font-family:"Montaser Arabic",serif; font-weight:700;
+      font-size:clamp(28px, 5.6vw, 48px);
       letter-spacing:.02em; margin:.2rem 0;
       text-shadow:0 2px 10px rgba(0,0,0,.75);
     }
 
-    /* Bloc infos contact — flou sans anneau blanc (pas de border) */
+    /* Bloc infos contact : flou sans bord */
     .info{
       background:var(--glass-bg);
       backdrop-filter:blur(6px);
-      border:none;                     /* <-- supprime le “rond blanc” */
-      border-radius:16px;
-      max-width:760px; margin:0 auto 10vh; padding:2.2rem 1.4rem;
+      border:none; border-radius:16px;
+      max-width:760px; width:min(92vw, 760px);
+      margin: 2vh auto 10vh;
+      padding: clamp(16px, 4.2vw, 28px) clamp(16px, 4.5vw, 32px);
       text-align:center; box-shadow:0 10px 40px rgba(0,0,0,.35);
     }
     .brandTitle{
-      font-family:"MontaserArabic",serif; font-weight:700;
-      font-size:clamp(28px, 3.2vw, 42px);
-      letter-spacing:.02em; margin:0 0 1.1rem;
+      font-family:"Montaser Arabic",serif; font-weight:700;
+      font-size:clamp(24px, 4.6vw, 42px);
+      letter-spacing:.02em; margin:0 0 clamp(8px, 2.2vw, 16px);
       text-shadow:0 2px 8px rgba(0,0,0,.55);
     }
     .lines{
-      display:grid; gap:.45rem;
-      font-family:"Univers",sans-serif; font-weight:400; /* texte = Univers normal */
-      font-size:clamp(16px, 1.4vw, 20px);
+      display:grid; gap: clamp(6px, 1.6vw, 10px);
+      font-family:"Univers",sans-serif; font-weight:400;
+      font-size:clamp(16px, 2.8vw, 20px);
+      line-height:1.5;
     }
     .lines a{ color:#fff; text-decoration:none; }
     .lines a:hover{ opacity:.9 }
 
-    /* Responsive */
+    /* ===== Mobile (≤700px) ===== */
     @media (max-width:700px){
-      .brand-logo img{ width: clamp(80px, 14vw, 120px); }
-      .info{ margin-bottom:8vh; }
+      .top-words{ padding: clamp(8px, 3.4vh, 22px) clamp(12px, 4vw, 20px); }
+      .words-left{ gap: clamp(14px, 6.5vw, 28px); }
+      .brand-logo img{ width: clamp(72px, 16vw, 110px); }
+      .hero{ min-height: 32vh; }
+      .content{ padding-top: calc(var(--twH, 72px) + 8px); }
+      .info{ margin: 1.5vh auto 8vh; }
     }
 
     /* Accessibilité */
@@ -145,7 +149,7 @@
     <video src="assets/video/page4.mp4" autoplay muted loop playsinline poster="media/contact.jpg"></video>
   </div>
 
-  <!-- BANDEAU (liens + logo) -->
+  <!-- BANDEAU -->
   <div class="top-words" id="tw">
     <nav class="words-left" aria-label="Raccourcis">
       <a class="word-btn" href="page2.html">Production</a>
@@ -176,17 +180,14 @@
   <!-- JS : hauteur bandeau + transitions -->
   <script>
     (function(){
-      // hauteur du bandeau d'écritures
       const tw = document.getElementById('tw');
       function setH(){ document.documentElement.style.setProperty('--twH', (tw?tw.offsetHeight:0) + 'px'); }
       setH(); addEventListener('resize', setH);
 
-      // fade-in (inclut bfcache)
       function showPage(){ document.body.classList.add('is-loaded'); }
       addEventListener('DOMContentLoaded', showPage);
       addEventListener('pageshow', showPage);
 
-      // fade-out avant navigation
       document.addEventListener('click', function(e){
         const a = e.target.closest('a[href]'); if(!a) return;
         if(e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||e.button!==0) return;

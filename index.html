@@ -7,7 +7,6 @@
   <link rel="icon" href="assets/img/logopage.png" type="image/x-icon">
 
   <style>
-    /* === POLICES LOCALES === */
     @font-face{
       font-family:"Montaser Arabic";
       src:url("assets/fonts/MontaserArabic-Bold.woff2") format("woff2");
@@ -31,9 +30,10 @@
 
     *{box-sizing:border-box}
     html,body{height:100%}
+    html{scroll-behavior:smooth}
     body{
       margin:0; color:#fff; background:#000;
-      font-family:"Univers", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; /* Texte = Univers normal */
+      font-family:"Univers", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       overflow:hidden;
 
       opacity:0; transform:translateY(8px);
@@ -47,13 +47,17 @@
     /* ===== FOND VIDÉO ===== */
     .bg{ position:fixed; inset:0; z-index:-2; overflow:hidden; }
     .bg video,.bg img{
-      width:100%; height:100%; object-fit:cover; display:block;
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover; object-position:center;
+      display:block;
       filter:contrast(1.05) saturate(1.05);
     }
     .bg::after{
       content:""; position:absolute; inset:0;
       background:linear-gradient(0deg, rgba(0,0,0,.45), rgba(0,0,0,.35));
       z-index:1;
+      pointer-events:none;
     }
 
     /* ===== HERO ===== */
@@ -61,14 +65,16 @@
       position:fixed; inset:0;
       display:flex; flex-direction:column;
       align-items:center; justify-content:center;
-      gap: clamp(24px, 5vmin, 48px);
-      padding: 2rem; text-align:center;
+      gap: clamp(20px, 5vmin, 48px);
+      padding: max(24px, env(safe-area-inset-top)) 2rem max(24px, env(safe-area-inset-bottom) + 6vh);
+      text-align:center;
     }
 
-    /* LOGO */
+    /* LOGO — ne dépasse jamais l’écran en largeur */
     .logo{ display:grid; place-items:center; }
     .logo img{
-      width: clamp(180px, 200vmin, 520px); /* même règle que tu as mise */
+      width: clamp(200px, 60vw, 520px);   /* mieux sur mobile */
+      max-width: 92vw;                    /* sécurité supplémentaire */
       height:auto; display:block;
       filter: drop-shadow(0 12px 40px rgba(0,0,0,.45));
       user-select:none; -webkit-user-drag:none;
@@ -76,20 +82,29 @@
 
     /* BOUTON ENTRER = TITRE (Montaser Arabic gras) */
     .enter{
-      font-family:"Montaser Arabic", "Univers", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-weight:700;                               /* Titres = gras */
-      --fs: clamp(34px, 6.5vw, 72px);
-      font-size: calc(var(--fs) * 0.7); /* % pour changer la taille */
+      font-family:"MontaserArabic","Montaser Arabic",serif;
+      font-weight:700;
+      font-size: clamp(24px, 7.5vw, 56px);  /* lisible sur tel */
       letter-spacing:.02em;
       color:#fff; text-decoration:none;
       padding:.5rem 1.2rem;
       text-shadow:0 3px 14px rgba(0,0,0,.9);
-      -webkit-text-stroke: 1px rgba(0,0,0,.6);
+      -webkit-text-stroke: .8px rgba(0,0,0,.55);
       transition: transform .15s ease, text-shadow .15s ease;
     }
     .enter:hover{
       transform:translateY(-2px) scale(1.02);
       text-shadow:0 6px 18px rgba(0,0,0,1);
+    }
+
+    /* — Ajustements spécifiques téléphone — */
+    @media (max-width:700px){
+      .bg::after{
+        /* un peu plus de contraste pour bien voir le logo/texte */
+        background:linear-gradient(0deg, rgba(0,0,0,.58), rgba(0,0,0,.44));
+      }
+      .hero{ gap: clamp(16px, 4vh, 28px); }
+      .enter{ -webkit-text-stroke: .5px rgba(0,0,0,.55); }
     }
 
     /* Accessibilité */
@@ -103,6 +118,7 @@
 
   <!-- FOND -->
   <div class="bg" aria-hidden="true">
+    <!-- garde ta vidéo actuelle -->
     <video src="assets/video/page2.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
   </div>
 

@@ -29,8 +29,6 @@
     :root{
       --page-xdur:320ms;
       --page-xease:cubic-bezier(.2,.6,.2,1);
-      --splash-delay:500ms;
-      --splash-dur:900ms;
       --text-max:1100px;
     }
 
@@ -51,34 +49,20 @@
     /* ===== Fond vidéo ===== */
     .bg{position:fixed; inset:0; z-index:-2; overflow:hidden}
     .bg video,.bg img{
+      position:absolute; inset:0;
       width:100%; height:100%; object-fit:cover; display:block;
       filter:contrast(1.05) saturate(1.05);
     }
     .bg::after{
       content:""; position:absolute; inset:0;
       background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.5));
-      z-index:1;
+      z-index:1; pointer-events:none;
     }
-
-    /* ===== Splash logo ===== */
-    .splash{
-      position:fixed; inset:0; z-index:10;
-      display:grid; place-items:center;
-      pointer-events:none;
-      background:linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.45));
-      animation: splashOut var(--splash-dur) ease forwards;
-      animation-delay: var(--splash-delay);
-    }
-    .splash img{
-      width: clamp(180px, 200vmin, 520px);
-      height:auto; display:block;
-      filter: drop-shadow(0 12px 40px rgba(0,0,0,.45));
-      user-select:none; -webkit-user-drag:none;
-    }
-    @keyframes splashOut{
-      0%{opacity:1; transform:none}
-      60%{opacity:.6; transform:scale(.995)}
-      100%{opacity:0; transform:scale(.985)}
+    @media (max-width:700px){
+      .bg::after{
+        /* un peu plus de contraste sur mobile */
+        background:linear-gradient(180deg, rgba(0,0,0,.38), rgba(0,0,0,.58));
+      }
     }
 
     /* ===== Bandeau (boutons + logo) ===== */
@@ -95,7 +79,7 @@
     }
     .word-btn{
       display:inline-flex; align-items:center; justify-content:center;
-      font-family:"Univers", Arial, sans-serif; font-weight:700;
+      font-family:"Univers", Arial, sans-serif; font-weight:700; /* sous-titres = Univers gras */
       font-size: clamp(18px, 2.2vw, 30px);
       letter-spacing:.02em; color:#fff; text-decoration:none; opacity:.98;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
@@ -118,35 +102,36 @@
       height:auto;
     }
     @media (max-width:700px){
-      .brand-logo{ display:none }
-      .words-left{ gap: clamp(50px, 6vw, 60px) }
+      .brand-logo{ display:none } /* cache le logo coin en mobile */
+      .words-left{ gap: clamp(40px, 8vw, 72px) }
     }
 
-    /* ===== Hero ===== */
+    /* ===== Hero (sous le bandeau) ===== */
     .hero{
       position:relative; z-index:2;
-      min-height: calc(100svh - 0px);
+      min-height:100svh;
       display:flex; flex-direction:column;
       align-items:center; justify-content:center;        /* centré vertical */
-      padding: calc(var(--twH, 96px) + 6vh) 1rem 12vh;   /* marge top = hauteur bandeau + 6vh */
+      /* top = hauteur du bandeau + marge respi + safe-area top ; bottom = safe-area bottom + place pour le bouton */
+      padding: calc(var(--twH, 96px) + 6vh + env(safe-area-inset-top)) 1rem calc(12vh + env(safe-area-inset-bottom));
       text-align:center;
       gap: clamp(24px, 6vh, 56px);
     }
-    /* Logo plus gros et bien centré */
+    /* Logo plus gros et bien centré (meilleur rendu mobile) */
     .hero-logo{
-      width: clamp(260px, 48vmin, 680px);  /* ++ plus gros */
+      width: clamp(220px, 30%, 720px);
       height:auto; display:block;
       margin-inline:auto;
       filter: drop-shadow(0 12px 40px rgba(0,0,0,.45));
       user-select:none; -webkit-user-drag:none;
     }
-    /* Titre sous le logo, mais sans l’envoyer tout en bas */
+    /* Titre (Montaser Arabic gras) sous le logo */
     .title{
-      font-family:"Montaser Arabic","Univers",Arial,sans-serif;
+      font-family:"MontaserArabic","Montaser Arabic",serif; /* titres = Montaser Arabic gras */
       font-weight:700; letter-spacing:.02em;
       font-size:clamp(32px, 6vw, 72px);
       text-shadow:0 2px 12px rgba(0,0,0,.65);
-      margin: clamp(4vh, 8vh, 12vh) 0 0;   /* espace sous le logo */
+      margin: clamp(16px, 6vh, 60px) 0 0;
     }
 
     /* Bouton/logo pour descendre au contenu */
@@ -158,9 +143,14 @@
       backdrop-filter:blur(6px);
       text-decoration:none;
       transition:transform .15s ease;
+      padding:6px;
     }
     .scroll-btn:hover{ transform:translateX(-50%) translateY(-2px) }
     .scroll-btn img{ width:44px; height:auto; display:block; }
+    @media (max-width:700px){
+      .scroll-btn{ width:62px; height:62px }
+      .scroll-btn img{ width:40px }
+    }
 
     /* ===== Contenu sous la vidéo (fond noir) ===== */
     #content{ scroll-margin-top: 96px; }
@@ -173,27 +163,19 @@
     .container{ max-width:var(--text-max); margin:0 auto }
 
     .subtitle{
-      font-family:"Univers", Arial, sans-serif;
-      font-weight:700;
+      font-family:"Univers", Arial, sans-serif; font-weight:700; /* sous-titres = Univers gras */
       font-size:clamp(22px, 2.6vw, 36px);
       letter-spacing:.02em; margin:0 0 .6rem;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
     }
     .para{
-      font-family:"Univers", Arial, sans-serif;
-      font-weight:400; opacity:.95;
-      font-size:clamp(15px, 1.25vw, 19px);
+      font-family:"Univers", Arial, sans-serif; font-weight:400; /* texte = Univers normal */
+      opacity:.95; font-size:clamp(15px, 1.25vw, 19px);
       margin:.35rem 0 1rem;
-    }
-
-    @media (max-width:700px){
-      .scroll-btn{ width:62px; height:62px }
-      .scroll-btn img{ width:40px }
     }
 
     @media (prefers-reduced-motion: reduce){
       html{scroll-behavior:auto}
-      .splash{ animation:none; opacity:0 }
       body{ transition:none !important; transform:none !important; opacity:1 !important; }
     }
   </style>
@@ -203,11 +185,6 @@
   <!-- FOND VIDÉO -->
   <div class="bg" aria-hidden="true">
     <video src="assets/video/page1.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
-  </div>
-
-  <!-- LOGO splash -->
-  <div class="splash" aria-hidden="true">
-    <img src="assets/img/logopage1.png" alt="">
   </div>
 
   <!-- Bandeau de boutons -->
@@ -232,7 +209,7 @@
 
     <!-- Bouton/logo pour descendre au contenu -->
     <a class="scroll-btn" href="#content" aria-label="Aller au contenu">
-      <img src="assets/img/fleche.png" alt="fleche vers le bas">
+      <img src="assets/img/fleche.png" alt="Flèche vers le bas">
     </a>
   </header>
 
