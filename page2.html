@@ -38,17 +38,17 @@
     body{
       margin:0; color:#fff; background:#000; overflow:auto;
       font-family:"Univers", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-
       opacity:0; transform:translateY(8px);
       transition: opacity var(--page-xdur) var(--page-xease),
                   transform var(--page-xdur) var(--page-xease);
+      -webkit-tap-highlight-color:transparent;
     }
     body.is-loaded{ opacity:1; transform:none }
     body.is-exiting{ opacity:0; transform:translateY(8px) }
 
     /* ===== Fond vidéo ===== */
     .bg{position:fixed; inset:0; z-index:-2; overflow:hidden}
-    .bg video,.bg img{
+    .bg video{
       position:absolute; inset:0;
       width:100%; height:100%; object-fit:cover; display:block;
       filter:contrast(1.05) saturate(1.05);
@@ -60,12 +60,11 @@
     }
     @media (max-width:700px){
       .bg::after{
-        /* un peu plus de contraste sur mobile */
         background:linear-gradient(180deg, rgba(0,0,0,.38), rgba(0,0,0,.58));
       }
     }
 
-    /* ===== Bandeau (boutons + logo) ===== */
+    /* ===== Bandeau (liens + logo) ===== */
     .top-words{
       position:fixed; left:0; right:0; top:0;
       padding: clamp(12px, 4vh, 48px) clamp(20px, 5vw, 80px);
@@ -79,13 +78,15 @@
     }
     .word-btn{
       display:inline-flex; align-items:center; justify-content:center;
-      font-family:"Univers", Arial, sans-serif; font-weight:700; /* sous-titres = Univers gras */
+      font-family:"Univers", Arial, sans-serif; font-weight:700;
       font-size: clamp(18px, 2.2vw, 30px);
       letter-spacing:.02em; color:#fff; text-decoration:none; opacity:.98;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
       -webkit-text-stroke:.4px rgba(0,0,0,.45);
       padding:.15rem .35rem; border-radius:.4rem;
       transition:opacity .15s ease, transform .15s ease;
+      white-space:nowrap;
+      flex:0 0 auto;
     }
     .word-btn:hover{ opacity:1; transform:translateY(-1px) }
     .word-btn[aria-current="page"]{ opacity:1 }
@@ -93,17 +94,35 @@
     .brand-logo{
       display:inline-block; width:auto; height:auto; padding:0;
       background:transparent; border:none; backdrop-filter:none;
-      box-shadow:none; border-radius:0; transform:none;
+      box-shadow:none; border-radius:0; transform:none; justify-self:end;
     }
     .brand-logo:hover{ transform: translateY(-1px) }
     .brand-logo img{
-      display:block;
-      width: clamp(96px, 10vw, 160px);
-      height:auto;
+      display:block; width: clamp(96px, 10vw, 160px); height:auto;
     }
+
+    /* === NAV mobile identique page 3 === */
     @media (max-width:700px){
-      .brand-logo{ display:none } /* cache le logo coin en mobile */
-      .words-left{ gap: clamp(40px, 8vw, 72px) }
+      .top-words{
+        padding: 12px clamp(16px, 5vw, 24px);
+        grid-template-columns: 1fr auto;
+        align-items:center;
+      }
+      .words-left{
+        gap: clamp(12px, 5vw, 20px);
+        flex-wrap: nowrap;                  /* évite le retour à la ligne */
+      }
+      .word-btn{
+        font-size: clamp(14px, 4vw, 18px);
+        -webkit-text-stroke: .2px rgba(0,0,0,.45);
+        padding:.15rem .30rem;
+      }
+      .brand-logo img{
+        width: clamp(80px, 16vw, 120px);
+      }
+    }
+    @media (max-width:340px){
+      .brand-logo{ display:none; }          /* si trop serré */
     }
 
     /* ===== Hero (sous le bandeau) ===== */
@@ -111,39 +130,33 @@
       position:relative; z-index:2;
       min-height:100svh;
       display:flex; flex-direction:column;
-      align-items:center; justify-content:center;        /* centré vertical */
-      /* top = hauteur du bandeau + marge respi + safe-area top ; bottom = safe-area bottom + place pour le bouton */
+      align-items:center; justify-content:center;
       padding: calc(var(--twH, 96px) + 6vh + env(safe-area-inset-top)) 1rem calc(12vh + env(safe-area-inset-bottom));
       text-align:center;
       gap: clamp(24px, 6vh, 56px);
     }
-    /* Logo plus gros et bien centré (meilleur rendu mobile) */
     .hero-logo{
-      width: clamp(220px, 30%, 720px);
-      height:auto; display:block;
-      margin-inline:auto;
+      width: clamp(260px, 48vmin, 720px);
+      height:auto; display:block; margin-inline:auto;
       filter: drop-shadow(0 12px 40px rgba(0,0,0,.45));
       user-select:none; -webkit-user-drag:none;
     }
-    /* Titre (Montaser Arabic gras) sous le logo */
     .title{
-      font-family:"MontaserArabic","Montaser Arabic",serif; /* titres = Montaser Arabic gras */
+      font-family:"Montaser Arabic","Univers",Arial,sans-serif;
       font-weight:700; letter-spacing:.02em;
       font-size:clamp(32px, 6vw, 72px);
       text-shadow:0 2px 12px rgba(0,0,0,.65);
       margin: clamp(16px, 6vh, 60px) 0 0;
     }
 
-    /* Bouton/logo pour descendre au contenu */
+    /* Bouton descente */
     .scroll-btn{
       position:absolute; left:50%; bottom:28px; transform:translateX(-50%);
       display:grid; place-items:center;
       width:68px; height:68px; border-radius:50%;
       background:rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.35);
       backdrop-filter:blur(6px);
-      text-decoration:none;
-      transition:transform .15s ease;
-      padding:6px;
+      text-decoration:none; transition:transform .15s ease; padding:6px;
     }
     .scroll-btn:hover{ transform:translateX(-50%) translateY(-2px) }
     .scroll-btn img{ width:44px; height:auto; display:block; }
@@ -152,24 +165,23 @@
       .scroll-btn img{ width:40px }
     }
 
-    /* ===== Contenu sous la vidéo (fond noir) ===== */
+    /* ===== Contenu ===== */
     #content{ scroll-margin-top: 96px; }
     .content-block{
-      position:relative; z-index:0;
-      background:#000;
+      position:relative; z-index:0; background:#000;
       border-top:1px solid rgba(255,255,255,.1);
       padding: clamp(28px, 6vw, 64px) 1rem 12vh;
     }
     .container{ max-width:var(--text-max); margin:0 auto }
 
     .subtitle{
-      font-family:"Univers", Arial, sans-serif; font-weight:700; /* sous-titres = Univers gras */
+      font-family:"Univers", Arial, sans-serif; font-weight:700;
       font-size:clamp(22px, 2.6vw, 36px);
       letter-spacing:.02em; margin:0 0 .6rem;
       text-shadow:0 2px 8px rgba(0,0,0,.55);
     }
     .para{
-      font-family:"Univers", Arial, sans-serif; font-weight:400; /* texte = Univers normal */
+      font-family:"Univers", Arial, sans-serif; font-weight:400;
       opacity:.95; font-size:clamp(15px, 1.25vw, 19px);
       margin:.35rem 0 1rem;
     }
@@ -184,10 +196,10 @@
 
   <!-- FOND VIDÉO -->
   <div class="bg" aria-hidden="true">
-    <video src="assets/video/page1.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
+    <video src="assets/video/page2.mp4" autoplay muted loop playsinline poster="media/montreal.jpg"></video>
   </div>
 
-  <!-- Bandeau de boutons -->
+  <!-- Bandeau (liens + logo) -->
   <div class="top-words" id="tw">
     <nav class="words-left" aria-label="Raccourcis">
       <a class="word-btn" href="page2.html" aria-current="page">Production</a>
@@ -201,19 +213,14 @@
 
   <!-- HERO -->
   <header class="hero" aria-label="En-tête Production">
-    <!-- Logo centré et plus gros -->
     <img class="hero-logo" src="assets/img/Voiture-Site.png" alt="RAME">
-
-    <!-- Titre -->
     <h1 class="title">Production</h1>
-
-    <!-- Bouton/logo pour descendre au contenu -->
     <a class="scroll-btn" href="#content" aria-label="Aller au contenu">
       <img src="assets/img/fleche.png" alt="Flèche vers le bas">
     </a>
   </header>
 
-  <!-- CONTENU sur fond noir -->
+  <!-- CONTENU -->
   <main id="content" class="content-block" aria-label="Contenu Production">
     <div class="container">
       <h2 class="subtitle">Notre approche</h2>
@@ -229,12 +236,11 @@
 
   <!-- JS -->
   <script>
-    // Affiche la page (fade-in), y compris via bfcache
     function showPage(){ document.body.classList.add('is-loaded'); }
     addEventListener('DOMContentLoaded', showPage);
     addEventListener('pageshow', showPage);
 
-    // Mesure la hauteur du bandeau pour ajuster les calages
+    // Mesure la hauteur du bandeau pour --twH et le scroll-margin
     (function(){
       const tw = document.getElementById('tw');
       function setTopWordsH(){
@@ -246,11 +252,9 @@
       addEventListener('resize', setTopWordsH);
     })();
 
-    // Fade-out avant navigation (hors ancres/mail/tel)
+    // Transition douce entre pages
     document.addEventListener('click', function(e){
-      const a = e.target.closest('a[href]');
-      if(!a) return;
-
+      const a = e.target.closest('a[href]'); if(!a) return;
       if(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
       if(a.hasAttribute('download') || (a.target && a.target !== '_self')) return;
 
@@ -258,8 +262,8 @@
       if(!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
 
       const url = new URL(href, location.href);
-      const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
-      const sameOrigin = url.origin === location.origin;
+      const isHttp = (url.protocol === 'http:' || url.protocol === 'https:');
+      const sameOrigin = (url.origin === location.origin);
       if(!isHttp || !sameOrigin) return;
 
       e.preventDefault();
